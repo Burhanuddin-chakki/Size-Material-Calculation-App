@@ -24,3 +24,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.form-label {
+  font-weight: 600;
+}
+
+.dropdown-toggle {
+  width: 70%;
+}
+
+.main-container {
+  background-color: #e6e4e4;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2);
+}

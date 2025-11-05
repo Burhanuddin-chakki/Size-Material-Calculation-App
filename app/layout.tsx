@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "./navbar";
+import SideNav from "./side-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +26,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Size & Material Calculation App</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossOrigin="anonymous"/>
+      </head>
+      <body>
+        <div>
+          <div className="row" style={{ minHeight: "100vh" }}>
+            <div className="col-auto">
+              <SideNav />
+            </div>
+            <div className="col" style={{    "margin": "2rem 2rem 2rem 0.5rem;"}}>
+              {children}
+            </div>
+                
+          </div>
+        </div>
+        {/* <Navbar /> */}
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossOrigin="anonymous"></script>
       </body>
     </html>
   );
