@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { PipeType } from "../../common/interfaces";
+import z from "zod";
 
 interface VChannelDetailProps {
-    allVChannelTypes: string[];
+    pipeType: PipeType[];
 }
+
+export const vChannelSchema = z.object({
+    vChannelType: z.string(),
+    vChannelRate: z.number().min(1, "V-Channel rate must be greater than 0"),
+    vChannelExtraLength: z.number().optional(),
+});
 
 export default function VChannelDetail(props: VChannelDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
@@ -15,6 +23,10 @@ export default function VChannelDetail(props: VChannelDetailProps) {
         setShowExtraTrack(!showExtraTrack);
         setValue("vChannelExtraLength", 0);
     }
+
+    useEffect(() => {
+        setValue("vChannelRate", props.pipeType.find(pt => pt.color === watch("vChannelType"))?.ratePerKg || 0);
+    }, [watch("vChannelType")]);
 
     return (
         <>
@@ -30,11 +42,11 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-dark">
                             {
-                                props.allVChannelTypes.map((type) => (
-                                    <li key={type}><a className="dropdown-item" href="#" onClick={(e) => {
+                                props.pipeType.map((type) => (
+                                    <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
                                         e.preventDefault();
-                                        setValue("vChannelType", type);
-                                    }}>{type}</a></li>
+                                        setValue("vChannelType", type.color);
+                                    }}>{type.color}</a></li>
                                 ))
                             }
                         </ul>

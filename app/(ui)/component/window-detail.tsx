@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
+import WindowTypePage from "../[id]/page";
 
 
 
@@ -11,7 +12,11 @@ export const windowInputSchema = z.object({
     isContainMacharJali: z.boolean(),
 })
 
-export default function WindowDetail() {
+interface WindowDetailProps {
+    onEstimateMaterial?: () => void;
+}
+
+export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
 
 
@@ -90,7 +95,7 @@ export default function WindowDetail() {
                 </div>
                 {errors.numberOfDoors && (
                     <div className="text-danger small mt-1">
-                        {errors.numberOfDoors.message}
+                        {errors.numberOfDoors.message as string}
                     </div>
                 )}
             </div>
@@ -108,13 +113,14 @@ export default function WindowDetail() {
                 </div>
                 {errors.isContainMacharJali && (
                     <div className="text-danger small mt-1">
-                        {errors.isContainMacharJali.message}
+                        {errors.isContainMacharJali.message as string}
                     </div>
                 )}
             </div>
             <div className="col-2" style={{ marginTop: "2rem" }}>
                 <button
                     className="btn btn-success"
+                    onClick={onEstimateMaterial}
                     type="button"
                 >
                     Estimate Material

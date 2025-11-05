@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { z } from "zod";
+import { PipeType } from "../../common/interfaces";
 
 interface ShutterDetailProps {
-    shutterTrackTypes: string[];
+    pipeType: PipeType[];
 }
+
+export const shutterPipeSchema = z.object({
+    shutterTrackType: z.string(),
+    shutterTrackRate: z.number().min(1, "Shutter track rate must be greater than 0"),
+    shutterExtraTrackLength: z.number().optional(),
+});
 
 export default function ShutterDetail(props: ShutterDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
@@ -15,6 +23,10 @@ export default function ShutterDetail(props: ShutterDetailProps) {
         setShowExtraTrack(!showExtraTrack);
         setValue("shutterExtraTrackLength", 0);
     }
+
+    useEffect(() => {
+            setValue("shutterTrackRate", props.pipeType.find(pt => pt.color === watch("shutterTrackType"))?.ratePerKg || 0);
+        }, [watch("shutterTrackType")]);
 
     return (
         <>
@@ -30,11 +42,11 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-dark">
                             {
-                                props.shutterTrackTypes.map((type) => (
-                                    <li key={type}><a className="dropdown-item" href="#" onClick={(e) => {
+                                props.pipeType.map((type) => (
+                                    <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
                                         e.preventDefault();
-                                        setValue("shutterTrackType", type);
-                                    }}>{type}</a></li>
+                                        setValue("shutterTrackType", type.color);
+                                    }}>{type.color}</a></li>
                                 ))
                             }
                         </ul>
@@ -49,10 +61,10 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                 <div className="col-3">
                     <label className="form-label">Shutter Track Rate</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.shutterTrackRate ? 'is-invalid' : ''}`}
-                            placeholder="Rate" 
+                            placeholder="Rate"
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -76,10 +88,10 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                     <div className="col-3">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 className={`form-control ${errors.shutterExtraTrackLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length" 
+                                placeholder="Track Length"
                                 aria-label="track-length"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}

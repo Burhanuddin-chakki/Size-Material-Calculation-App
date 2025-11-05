@@ -38,7 +38,7 @@ export default function RootLayout({
             <div className="col-auto">
               <SideNav />
             </div>
-            <div className="col" style={{    "margin": "2rem 2rem 2rem 0.5rem;"}}>
+            <div className="col" style={{ margin: "2rem 2rem 2rem 0.5rem" }}>
               {children}
             </div>
                 

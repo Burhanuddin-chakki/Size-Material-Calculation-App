@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { PipeType } from "./common/interfaces";
+import { PipeType } from "../../common/interfaces";
 
 
 interface TrackDetailProps {
@@ -25,30 +25,9 @@ export default function TrackDetail(props: TrackDetailProps ) {
         setValue("extraTrackPipeLength", 0);
     }
 
-    // useEffect(() => {
-    //     setValue("trackPipeType", props.pipeType[0].color);
-    // }, []);
     useEffect(() => {
         setValue("trackPipeRate", props.pipeType.find(pt => pt.color === watch("trackPipeType"))?.ratePerKg || 0);
     }, [watch("trackPipeType")]);
-
-    // Set default pipe type when component mounts
-    // useEffect(() => {
-    //     if (props.pipeType.length > 0 && !watch("trackPipeType")) {
-    //         setValue("trackPipeType", props.pipeType[0].color);
-    //     }
-    // }, [props.pipeType, setValue, watch]);
-
-    // Update track rate when pipe type changes
-    // useEffect(() => {
-    //     const selectedPipeType = watch("trackPipeType");
-    //     if (selectedPipeType) {
-    //         const selectedPipe = props.pipeType.find(pt => pt.color === selectedPipeType);
-    //         if (selectedPipe) {
-    //             setValue("trackPipeRate", selectedPipe.ratePerKg || 0);
-    //         }
-    //     }
-    // }, [watch("trackPipeType")]);
 
     return (
         <>

@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { z } from "zod";
+import { PipeType } from "../../common/interfaces";
 
 interface InterLockDetailProps {
-    allInterLockTypes: string[];
+    pipeType: PipeType[];
 }
 
-export default function InterLockDetail(props: InterLockDetailProps ) {
+export const interLockPipeSchema = z.object({
+    interLockType: z.string(),
+    interLockRate: z.number().min(1, "InterLock rate must be greater than 0"),
+    interLockExtraLength: z.number().optional(),
+});
+
+export default function InterLockDetail(props: InterLockDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
 
@@ -15,6 +23,10 @@ export default function InterLockDetail(props: InterLockDetailProps ) {
         setShowExtraTrack(!showExtraTrack);
         setValue("interLockExtraLength", 0);
     }
+
+    useEffect(() => {
+        setValue("interLockRate", props.pipeType.find(pt => pt.color === watch("interLockType"))?.ratePerKg || 0);
+    }, [watch("interLockType")]);
 
     return (
         <>
@@ -30,11 +42,11 @@ export default function InterLockDetail(props: InterLockDetailProps ) {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-dark">
                             {
-                                props.allInterLockTypes.map((type) => (
-                                    <li key={type}><a className="dropdown-item" href="#" onClick={(e) => {
+                                props.pipeType.map((type) => (
+                                    <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
                                         e.preventDefault();
-                                        setValue("interLockType", type);
-                                    }}>{type}</a></li>
+                                        setValue("interLockType", type.color);
+                                    }}>{type.color}</a></li>
                                 ))
                             }
                         </ul>
@@ -49,10 +61,10 @@ export default function InterLockDetail(props: InterLockDetailProps ) {
                 <div className="col-3">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.interLockRate ? 'is-invalid' : ''}`}
-                            placeholder="Rate" 
+                            placeholder="Rate"
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -76,10 +88,10 @@ export default function InterLockDetail(props: InterLockDetailProps ) {
                     <div className="col-3">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 className={`form-control ${errors.interLockExtraLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length" 
+                                placeholder="Track Length"
                                 aria-label="track-length"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}

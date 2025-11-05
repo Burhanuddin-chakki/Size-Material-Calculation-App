@@ -1,13 +1,22 @@
 import { useFormContext } from "react-hook-form";
-import { MaterialItemType } from "./window-estimation";
+import { MaterialType } from "../../common/interfaces";
+import { useEffect } from "react";
 
 interface MaterialPriceProps {
-    materialList: MaterialItemType[];
+    materialList: MaterialType[];
 }
+
+
 
 export default function MaterialPrice({ materialList }: MaterialPriceProps) {
 
-    const { register, formState: { errors } } = useFormContext();
+    const { register, formState: { errors }, setValue } = useFormContext();
+
+    useEffect(() => {
+        materialList.forEach((item) => {
+            setValue(item.field, item.rate);
+        });
+    }, []);
 
     return (
         <>

@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import TrackDetail from "./track-detail";
-import ShutterDetail from "./shutter-detail";
+import TrackDetail from "./(ui)/component/track-detail";
+import ShutterDetail from "./(ui)/component/shutter-detail";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, z } from "zod";
-import InterLockDetail from "./interlock-detail";
-import VChannelDetail from "./vchannel-detail";
-import MaterialPrice from "./material-price";
-import EstimationDetail from "./estimation-detail";
+import InterLockDetail from "./(ui)/component/interlock-detail";
+import VChannelDetail from "./(ui)/component/vchannel-detail";
+import MaterialPrice from "./(ui)/component/material-price";
+import EstimationDetail from "./(ui)/component/estimation-detail";
 
 export interface MaterialItemType {
     label: string;

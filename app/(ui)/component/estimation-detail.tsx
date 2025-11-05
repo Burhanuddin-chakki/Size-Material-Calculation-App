@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MaterialItemType } from "./window-estimation";
+import { MaterialItemType } from "../../window-estimation";
 
 // Type definitions for the estimation data structure
 interface CuttingEstimation {
