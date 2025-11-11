@@ -3,6 +3,7 @@
 import mongoose from "mongoose";
 
 const uri = process.env.MONGODB_URI || 'MONGODB_URI=mongodb://localhost:27017/window-estimation-db';
+console.log("MongoDB URI:", uri);
 
 const catched = (global as any).mongoose || {connection: null}
 
