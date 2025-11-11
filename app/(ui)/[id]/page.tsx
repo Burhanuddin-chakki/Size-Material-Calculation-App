@@ -34,6 +34,10 @@ export default function WindowTypePage() {
     const params = useParams();
     const windowId = params['id'];
 
+    // const updateMaterialList() {
+
+    // }
+
     const getMaterialSchema = () => {
         let schema = z.object({});
         materialList.forEach((item) => {
@@ -115,6 +119,7 @@ export default function WindowTypePage() {
         }
     }
 
+    //used to get dynamic components based on window type
     const getPipeDetailComponent = useMemo(() => {
         if (!isLoading && windowType && windowType in pipeTypeToComponentMapping) {
             return (pipeTypeToComponentMapping)[windowType].map((Component) => {
@@ -139,7 +144,7 @@ export default function WindowTypePage() {
                 keepValues: false // Don't keep current form values
             });
         }
-    }, [isLoading]);
+    }, [isLoading, materialList]);
 
     if (isLoading) {
         return (
@@ -181,7 +186,7 @@ export default function WindowTypePage() {
                 </form>
             </FormProvider> 
             : 
-            null
+            <EstimationDetail materialList={materialList}/>
             }
         </>
     );

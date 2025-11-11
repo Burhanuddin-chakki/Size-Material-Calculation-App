@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MaterialItemType } from "../../window-estimation";
+import { MaterialType } from "@/app/common/interfaces";
 
 // Type definitions for the estimation data structure
 interface CuttingEstimation {
@@ -56,16 +57,22 @@ interface MaterialEstimation {
     totalPrice: number;
 }
 
+type windowType = '2 Track Domal' | 'Mini Domal' | 'Normal' | '18/60'; 
+
 interface MaterialPriceProps {
-    materialList: MaterialItemType[];
-    allDomalTypes: string[];
-    deepDomalType: string[];
-    domalType: string[];
+    materialList: MaterialType[];
+    // allDomalTypes: string[];
+    // deepDomalType: string[];
+    // domalType: string[];
 }
 
 type TrackType = 'track' | 'shutter' | 'interlock' | 'vchannel';
 
-export default function MaterialPrice({ materialList, allDomalTypes, deepDomalType, domalType }: MaterialPriceProps) {
+export default function MaterialPrice({ materialList }: MaterialPriceProps) {
+
+    const allDomalTypes: string[] = ['3 Track Domal', '2 Track Domal', 'Mini Domal'];
+    const deepDomalType: string[] = ['Deep 3 Track Domal', 'Deep 2 Track Domal'];
+    const domalType: string[] = ['Domal', 'Deep Domal'];
 
     const pipeSizes: number[] = [180, 192];
     const vChannelPipeSizes: number[] = [180];
