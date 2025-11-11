@@ -167,17 +167,17 @@ export default function WindowTypePage() {
                     {/* Open after clicking on Estimate Material         */}
                     {showAdditionalSections && <div>
                         {getPipeDetailComponent?.map(component => {
-                            return <div className="row main-container" style={{ marginTop: "2rem" }} key={component.key}>
+                            return <div className="row main-container" style={{ marginTop: "1.5rem" }} key={component.key}>
                                 {component}
                             </div>
                         })}
 
                         {/* Material Prices */}
-                        <div className="row main-container" style={{ marginTop: "2rem" }}>
+                        <div className="row main-container" style={{ marginTop: "1.5rem" }}>
                             <MaterialPrice materialList={materialList} />
                         </div>
 
-                        <div className="row main-container" style={{ marginTop: "2rem" }}>
+                        <div className="row main-container" style={{ marginTop: "1.5rem" }}>
                             <button className="btn btn-success" type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? 'Processing...' : 'Submit'}
                             </button>

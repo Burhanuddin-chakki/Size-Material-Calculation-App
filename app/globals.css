@@ -23,21 +23,103 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
 }
 
 .form-label {
   font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
 }
 
 .dropdown-toggle {
-  width: 70%;
+  width: 100%;
+  min-width: 100px;
 }
 
 .main-container {
   background-color: #e6e4e4;
   border-radius: 5px;
   display: flex;
-  justify-content: center;
-  padding: 2rem;
+  justify-content: flex-start;
+  padding: 1.5rem;
   box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments for better spacing */
+.input-group {
+  margin-bottom: 0.75rem;
+}
+
+.btn {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  height: 2.3rem;
+  white-space: nowrap;
+}
+
+.form-control {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.input-group-text {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Ensure dropdowns have minimum width */
+.dropdown {
+  min-width: 100px;
+}
+
+/* Add some breathing room to columns */
+.row > [class*='col-'] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Improve form check spacing */
+.form-check {
+  padding-left: 1.5em;
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+}
+
+/* Better spacing for small text */
+.small {
+  font-size: 0.8rem;
+}
+
+/* Card improvements for better zoom handling */
+.card {
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Container fluid improvements */
+.container-fluid {
+  max-width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }

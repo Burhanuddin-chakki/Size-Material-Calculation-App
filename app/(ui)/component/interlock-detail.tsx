@@ -79,7 +79,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                     </div>
                 </div>
 
-                <div className="col-2" style={{ marginTop: "2rem" }}>
+                <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
                         {ExtraTrackButtonLabel}
                     </button>

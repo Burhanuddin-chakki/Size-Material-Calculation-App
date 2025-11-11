@@ -27,15 +27,15 @@ export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) 
 
     return (
         <>
-            <div className="col-3">
+            <div className="col-12 col-md-6 col-lg-3 mb-3">
                 <label className="form-label">Window Size</label>
-                <div className="row">
+                <div className="row g-2">
                     <div className="col-6">
-                        <div className="input-group mb-3">
+                        <div className="input-group">
                             <input
                                 type="number"
                                 className={`form-control ${errors.height ? 'is-invalid' : ''}`}
-                                placeholder="height"
+                                placeholder="Height"
                                 aria-label="height"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}
@@ -50,11 +50,11 @@ export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) 
                         </div>
                     </div>
                     <div className="col-6">
-                        <div className="input-group mb-3">
+                        <div className="input-group">
                             <input
                                 type="number"
                                 className={`form-control ${errors.width ? 'is-invalid' : ''}`}
-                                placeholder="width"
+                                placeholder="Width"
                                 aria-label="width"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}
@@ -71,7 +71,7 @@ export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) 
                 </div>
             </div>
 
-            <div className="col-2">
+            <div className="col-12 col-md-4 col-lg-2 mb-3">
                 <label className="form-label">No. of Partition</label>
                 <div className="dropdown">
                     <button
@@ -100,7 +100,7 @@ export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) 
                 )}
             </div>
 
-            <div className="col-2" style={{ marginTop: "2rem" }}>
+            <div className="col-12 col-md-4 col-lg-2 mb-3 d-flex align-items-end">
                 <div className="form-check form-switch">
                     <input
                         className="form-check-input"
@@ -117,9 +117,10 @@ export default function WindowDetail({ onEstimateMaterial }: WindowDetailProps) 
                     </div>
                 )}
             </div>
-            <div className="col-2" style={{ marginTop: "2rem" }}>
+            
+            <div className="col-12 col-md-4 col-lg-3 mb-3 d-flex align-items-end">
                 <button
-                    className="btn btn-success"
+                    className="btn btn-success w-100"
                     onClick={onEstimateMaterial}
                     type="button"
                 >

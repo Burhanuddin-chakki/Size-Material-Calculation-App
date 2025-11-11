@@ -34,11 +34,11 @@ export default function RootLayout({
       </head>
       <body>
         <div>
-          <div className="row" style={{ minHeight: "100vh" }}>
+          <div className="row g-0" style={{ minHeight: "100vh" }}>
             <div className="col-auto">
               <SideNav />
             </div>
-            <div className="col" style={{ margin: "2rem 2rem 2rem 0.5rem" }}>
+            <div className="col" style={{ padding: "1.5rem 1.5rem 1.5rem 1rem" }}>
               {children}
             </div>
                 

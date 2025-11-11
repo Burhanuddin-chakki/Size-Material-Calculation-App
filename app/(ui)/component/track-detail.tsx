@@ -3,7 +3,6 @@ import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { PipeType } from "../../common/interfaces";
 
-
 interface TrackDetailProps {
     pipeType: PipeType[];
 }
@@ -17,8 +16,6 @@ export default function TrackDetail(props: TrackDetailProps ) {
     const [showExtraTrack, setShowExtraTrack] = useState(false);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
-
-    
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
@@ -80,7 +77,7 @@ export default function TrackDetail(props: TrackDetailProps ) {
                     </div>
                 </div>
 
-                <div className="col-2" style={{ marginTop: "2rem" }}>
+                <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
                         {ExtraTrackButtonLabel}
                     </button>
