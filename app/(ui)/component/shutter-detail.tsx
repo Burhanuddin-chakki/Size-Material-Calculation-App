@@ -10,6 +10,9 @@ interface ShutterDetailProps {
 export const shutterPipeSchema = z.object({
     shutterTrackType: z.string(),
     shutterTrackRate: z.number().min(1, "Shutter track rate must be greater than 0"),
+    shutterTrackWeight: z.number().min(1, "Shutter track weight must be greater than 0"),
+    shutterPipeSize180: z.boolean(),
+    shutterPipeSize192: z.boolean(),
     shutterExtraTrackLength: z.number().optional(),
 });
 
@@ -26,6 +29,8 @@ export default function ShutterDetail(props: ShutterDetailProps) {
 
     useEffect(() => {
             setValue("shutterTrackRate", props.pipeType.find(pt => pt.color === watch("shutterTrackType"))?.ratePerKg || 0);
+            setValue("shutterPipeSize180", true);
+            setValue("shutterPipeSize192", true);
         }, [watch("shutterTrackType")]);
 
     return (
@@ -34,7 +39,7 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                 <h3>Shutter</h3>
             </div>
             <div className="row mt-3">
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Shutter Track Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +63,7 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                     )}
                 </div>
 
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Shutter Track Rate</label>
                     <div className="input-group mb-3">
                         <input
@@ -79,13 +84,61 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                     </div>
                 </div>
 
+                <div className="col-2">
+                    <label className="form-label">Shutter Track Weight</label>
+                    <div className="input-group mb-3">
+                        <input
+                            type="number"
+                            className={`form-control ${errors.shutterTrackWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight"
+                            aria-label="weight"
+                            step="1.00"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("shutterTrackWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">Kg</span>
+                        {errors.shutterTrackWeight && (
+                            <div className="invalid-feedback">
+                                {errors.shutterTrackWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="col-1" style={{ marginTop: "1.5rem" }}>
+                    <div className="d-flex flex-column">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="shutterPipeSize180"
+                                {...register("shutterPipeSize180")}
+                            />
+                            <label className="form-check-label" htmlFor="shutterPipeSize180">
+                                180"
+                            </label>
+                        </div>
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="shutterPipeSize192"
+                                {...register("shutterPipeSize192")}
+                            />
+                            <label className="form-check-label" htmlFor="shutterPipeSize192">
+                                192"
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
                         {ExtraTrackButtonLabel}
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-3">
+                    <div className="col-2">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
                             <input

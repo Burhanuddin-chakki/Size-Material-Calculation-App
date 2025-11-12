@@ -10,6 +10,9 @@ interface InterLockDetailProps {
 export const interLockPipeSchema = z.object({
     interLockType: z.string(),
     interLockRate: z.number().min(1, "InterLock rate must be greater than 0"),
+    interLockWeight: z.number().min(1, "InterLock weight must be greater than 0"),
+    interLockPipeSize180: z.boolean(),
+    interLockPipeSize192: z.boolean(),
     interLockExtraLength: z.number().optional(),
 });
 
@@ -26,6 +29,8 @@ export default function InterLockDetail(props: InterLockDetailProps) {
 
     useEffect(() => {
         setValue("interLockRate", props.pipeType.find(pt => pt.color === watch("interLockType"))?.ratePerKg || 0);
+        setValue("interLockPipeSize180", true);
+        setValue("interLockPipeSize192", true);
     }, [watch("interLockType")]);
 
     return (
@@ -34,7 +39,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                 <h3>InterLock</h3>
             </div>
             <div className="row mt-3">
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Track Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +63,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                     )}
                 </div>
 
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
                         <input
@@ -79,13 +84,61 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                     </div>
                 </div>
 
+                <div className="col-2">
+                    <label className="form-label">InterLock Weight</label>
+                    <div className="input-group mb-3">
+                        <input
+                            type="number"
+                            className={`form-control ${errors.interLockWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight"
+                            aria-label="weight"
+                            step="1.00"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("interLockWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">Kg</span>
+                        {errors.interLockWeight && (
+                            <div className="invalid-feedback">
+                                {errors.interLockWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="col-1" style={{ marginTop: "1.5rem" }}>
+                    <div className="d-flex flex-column">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="interLockPipeSize180"
+                                {...register("interLockPipeSize180")}
+                            />
+                            <label className="form-check-label" htmlFor="interLockPipeSize180">
+                                180"
+                            </label>
+                        </div>
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="interLockPipeSize192"
+                                {...register("interLockPipeSize192")}
+                            />
+                            <label className="form-check-label" htmlFor="interLockPipeSize192">
+                                192"
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
                         {ExtraTrackButtonLabel}
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-3">
+                    <div className="col-2">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
                             <input

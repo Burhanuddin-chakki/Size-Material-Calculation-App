@@ -1,6 +1,7 @@
 export interface WindowType {
     id: number;
     windowType: string;
+    imageURL: string;
     windowTrack: number;
 }
 

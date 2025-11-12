@@ -10,6 +10,9 @@ interface VChannelDetailProps {
 export const vChannelSchema = z.object({
     vChannelType: z.string(),
     vChannelRate: z.number().min(1, "V-Channel rate must be greater than 0"),
+    vChannelWeight: z.number().min(1, "V-Channel weight must be greater than 0"),
+    vChannelPipeSize180: z.boolean(),
+    vChannelPipeSize192: z.boolean(),
     vChannelExtraLength: z.number().optional(),
 });
 
@@ -26,6 +29,8 @@ export default function VChannelDetail(props: VChannelDetailProps) {
 
     useEffect(() => {
         setValue("vChannelRate", props.pipeType.find(pt => pt.color === watch("vChannelType"))?.ratePerKg || 0);
+        setValue("vChannelPipeSize180", true);
+        setValue("vChannelPipeSize192", true);
     }, [watch("vChannelType")]);
 
     return (
@@ -34,7 +39,7 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                 <h3>V-Channel</h3>
             </div>
             <div className="row mt-3">
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">V-Channel Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +63,7 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                     )}
                 </div>
 
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">V-Channel Rate</label>
                     <div className="input-group mb-3">
                         <input 
@@ -79,13 +84,61 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                     </div>
                 </div>
 
+                <div className="col-2">
+                    <label className="form-label">V-Channel Weight</label>
+                    <div className="input-group mb-3">
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.vChannelWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight" 
+                            aria-label="weight"
+                            step="1.00"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("vChannelWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">Kg</span>
+                        {errors.vChannelWeight && (
+                            <div className="invalid-feedback">
+                                {errors.vChannelWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="col-1" style={{ marginTop: "1.5rem" }}>
+                    <div className="d-flex flex-column">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="vChannelPipeSize180"
+                                {...register("vChannelPipeSize180")}
+                            />
+                            <label className="form-check-label" htmlFor="vChannelPipeSize180">
+                                180"
+                            </label>
+                        </div>
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="vChannelPipeSize192"
+                                {...register("vChannelPipeSize192")}
+                            />
+                            <label className="form-check-label" htmlFor="vChannelPipeSize192">
+                                192"
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
                         {ExtraTrackButtonLabel}
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-3">
+                    <div className="col-2">
                         <label className="form-label">Extra V-Channel Length</label>
                         <div className="input-group mb-3">
                             <input 

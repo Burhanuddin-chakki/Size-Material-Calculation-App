@@ -9,6 +9,9 @@ interface TrackDetailProps {
 export const trackPipeSchema = z.object({
     trackPipeType: z.string(),
     trackPipeRate: z.number().min(1, "Track rate must be greater than 0"),
+    trackPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
+    trackPipeSize180: z.boolean(),
+    trackPipeSize192: z.boolean(),
     extraTrackPipeLength: z.number().optional(),
 })
 export default function TrackDetail(props: TrackDetailProps ) {
@@ -24,6 +27,8 @@ export default function TrackDetail(props: TrackDetailProps ) {
 
     useEffect(() => {
         setValue("trackPipeRate", props.pipeType.find(pt => pt.color === watch("trackPipeType"))?.ratePerKg || 0);
+        setValue("trackPipeSize180", true);
+        setValue("trackPipeSize192", true);
     }, [watch("trackPipeType")]);
 
     return (
@@ -32,7 +37,7 @@ export default function TrackDetail(props: TrackDetailProps ) {
                 <h3>Track</h3>
             </div>
             <div className="row mt-3">
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Track Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -56,7 +61,7 @@ export default function TrackDetail(props: TrackDetailProps ) {
                     )}
                 </div>
 
-                <div className="col-3">
+                <div className="col-2">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
                         <input 
@@ -76,6 +81,52 @@ export default function TrackDetail(props: TrackDetailProps ) {
                         )}
                     </div>
                 </div>
+                <div className="col-2">
+                    <label className="form-label">Track Weight</label>
+                    <div className="input-group mb-3">
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.trackPipeWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight" 
+                            aria-label="weight"
+                            step="1.00"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("trackPipeWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">Kg</span>
+                        {errors.trackPipeWeight && (
+                            <div className="invalid-feedback">
+                                {errors.trackPipeWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className="col-1" style={{ marginTop: "1.5rem" }}>
+                    <div className="d-flex flex-column">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="trackPipeSize180"
+                                {...register("trackPipeSize180")}
+                            />
+                            <label className="form-check-label" htmlFor="trackPipeSize180">
+                                180"
+                            </label>
+                        </div>
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="trackPipeSize192"
+                                {...register("trackPipeSize192")}
+                            />
+                            <label className="form-check-label" htmlFor="trackPipeSize192">
+                                192"
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="col-auto" style={{ marginTop: "2rem" }}>
                     <button className="btn btn-primary" type="button" onClick={showExtraTrackField}>
@@ -83,7 +134,7 @@ export default function TrackDetail(props: TrackDetailProps ) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-3">
+                    <div className="col-2">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
                             <input 

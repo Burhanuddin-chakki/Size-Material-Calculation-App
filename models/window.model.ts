@@ -4,6 +4,7 @@ const { Schema, model, models } = mongoose;
 const windowSchema = new Schema({
     id: { type: Number, unique: true, index: true, required: true },
     windowType: { type: String, required: true },
+    imageURL: { type: String, required: true },
     windowField: { type: String, required: true },
 }, { timestamps: true });
 

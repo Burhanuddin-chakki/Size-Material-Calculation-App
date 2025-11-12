@@ -18,12 +18,12 @@ export default async function CreateEstimationPage() {
                         <Link href={`/${type.id}`} style={{ textDecoration: "none", color: "black" }}>
                             <div className="card h-100" style={{ maxWidth: "100%" }}>
                                 <Image 
-                                    src='/2-track-window.webp' 
+                                    src={type.imageURL}
                                     width={500} 
                                     height={500} 
                                     className="card-img-top" 
                                     alt={type.windowType}
-                                    style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />
                                 <div className="card-body">
                                     <p className="card-text text-center"><strong>{type.windowType}</strong></p>

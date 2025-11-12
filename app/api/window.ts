@@ -8,13 +8,13 @@ import PipeTypeModel from "@/models/pipe-type.model";
 
 export async function fetchWindows(): Promise<WindowType[]> {
     await connectDb();
-    const response = await WindowModel.find({}, { _id: 0, id: 1, windowType: 1, windowTrack: 1 }).sort({ id: 1 }).lean();
+    const response = await WindowModel.find({}, { _id: 0, id: 1, windowType: 1, imageURL: 1, windowTrack: 1 }).sort({ id: 1 }).lean();
     return JSON.parse(JSON.stringify(response));
 }
 
 export async function fetchWindowfromWindowId(windowId: number): Promise<WindowType> {
     await connectDb();
-    const response = await WindowModel.findOne({ id: windowId }, { _id: 0, id: 1, windowType: 1, windowTrack: 1 }).sort({ id: 1 }).lean();
+    const response = await WindowModel.findOne({ id: windowId }, { _id: 0, id: 1, windowType: 1, imageURL: 1, windowTrack: 1 }).sort({ id: 1 }).lean();
     return JSON.parse(JSON.stringify(response));
 }
 
