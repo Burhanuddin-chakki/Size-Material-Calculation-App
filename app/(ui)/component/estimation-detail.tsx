@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { MaterialItemType } from "../../window-estimation";
 import { MaterialType } from "@/app/common/interfaces";
 
 // Type definitions for the estimation data structure
