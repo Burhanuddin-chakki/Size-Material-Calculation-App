@@ -1,22 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { PipeDetailType, PipeType } from "../../common/interfaces";
 
-interface TrackDetailProps {
+interface spdpDetailProps {
     pipeType: PipeType[];
     pipeDetail: PipeDetailType[] 
 }
-export const trackPipeSchema = z.object({
-    trackPipeType: z.string(),
-    trackPipeRate: z.number().min(1, "Track rate must be greater than 0"),
-    smallTrackPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
-    bigTrackPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
-    trackPipeSize180: z.boolean(),
-    trackPipeSize192: z.boolean(),
-    extraTrackPipeLength: z.number().optional(),
+export const spdpPipeSchema = z.object({
+    spdpPipeType: z.string(),
+    spdpPipeRate: z.number().min(1, "SPDP rate must be greater than 0"),
+    smallSpdpPipeWeight: z.number().min(1, "SPDP weight must be greater than 0"),
+    bigSpdpPipeWeight: z.number().min(1, "SPDP weight must be greater than 0"),
+    spdpType: z.string(),
+    spdpPipeSize180: z.boolean(),
+    spdpPipeSize192: z.boolean(),
+    extraSpdpPipeLength: z.number().optional(),
 })
-export default function TrackDetail(props: TrackDetailProps ) {
+export default function SpdpDetail(props: spdpDetailProps ) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
 
@@ -24,47 +25,72 @@ export default function TrackDetail(props: TrackDetailProps ) {
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("extraTrackPipeLength", 0);
+        setValue("extraSpdpPipeLength", 0);
     }
+    
+    const selectedSpOrDpPipe = (watch as any)("selectedSpOrDpPipe") as "SP" | "DP" | "none" | undefined;
+    const spdpPipeType = watch("spdpPipeType");
+    const spdpType = watch("spdpType");
 
-    useEffect(() => {
-        const trackPipeDetail = props.pipeDetail.find(pd => pd.pipeType === 'Track');
-        setValue("smallTrackPipeWeight", trackPipeDetail?.pipeSizes[0].weight || 0);
-        setValue("bigTrackPipeWeight", trackPipeDetail?.pipeSizes[1].weight || 0);
-    }, [watch("trackPipeType")]);
+    // Filter pipe details based on selected SP or DP
+    const pipeDetail = useMemo(() => {
+        return props.pipeDetail.filter(pd => pd.pipeType === selectedSpOrDpPipe);
+    }, [ selectedSpOrDpPipe ]);
 
+    // Initialize default values when component mounts or selectedSpOrDpPipe changes
     useEffect(() => {
-        setValue("trackPipeRate", props.pipeType.find(pt => pt.color === watch("trackPipeType"))?.ratePerKg || 0);
-        setValue("trackPipeSize180", true);
-        setValue("trackPipeSize192", true);
-    }, [watch("trackPipeType")]);
+        // if (selectedSpOrDpPipe && props.pipeType.length > 0) {
+            setValue("spdpPipeType", props.pipeType[0]?.color || "");
+            setValue("spdpPipeSize180", true);
+            setValue("spdpPipeSize192", true);
+        // }
+        if (pipeDetail.length > 0) {
+            setValue("spdpType", pipeDetail[0]?.pipeName || "");
+        }
+    }, [ pipeDetail]);
+
+    // Update weight when spdpType changes
+    useEffect(() => {
+        if (spdpType) {
+            const spdpPipeDetail = pipeDetail.find(pd => pd.pipeName === spdpType);
+            setValue("smallSpdpPipeWeight", spdpPipeDetail?.pipeSizes[0]?.weight || 0);
+            setValue("bigSpdpPipeWeight", spdpPipeDetail?.pipeSizes[1]?.weight || 0);
+        }
+    }, [spdpType, pipeDetail]);
+
+    // Update rate when spdpPipeType changes
+    useEffect(() => {
+        if (spdpPipeType) {
+            setValue("spdpPipeRate", props.pipeType.find(pt => pt.color === spdpPipeType)?.ratePerKg || 0);
+        }
+    }, [spdpPipeType, props.pipeType, setValue]);
 
     return (
         <>
             <div className="row">
-                <h3>Track</h3>
+                <h3>SP/DP Pipe</h3>
             </div>
             <div className="row mt-3">
                 <div className="col-2">
-                    <label className="form-label">Track Type</label>
+                    <label className="form-label">Pipe Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {watch("trackPipeType")}
+                            {watch("spdpPipeType")}
                         </button>
                         <ul className="dropdown-menu dropdown-menu-dark">
                             {
                                 props.pipeType.map((type) => (
                                     <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
                                         e.preventDefault();
-                                        setValue("trackPipeType", type.color);
+                                        setValue("spdpPipeType", type.color);
                                     }}>{type.color}</a></li>
                                 ))
                             }
                         </ul>
                     </div>
-                    {errors.trackPipeType && (
+                    {errors.spdpPipeType && (
                         <div className="text-danger small mt-1">
-                            {errors.trackPipeType.message as string}
+                            {errors.spdpPipeType.message as string}
                         </div>
                     )}
                 </div>
@@ -74,54 +100,77 @@ export default function TrackDetail(props: TrackDetailProps ) {
                     <div className="input-group mb-3">
                         <input 
                             type="number" 
-                            className={`form-control ${errors.trackPipeRate ? 'is-invalid' : ''}`}
+                            className={`form-control ${errors.spdpPipeRate ? 'is-invalid' : ''}`}
                             placeholder="Rate" 
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("trackPipeRate", { valueAsNumber: true })}
+                            {...register("spdpPipeRate", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">$</span>
-                        {errors.trackPipeRate && (
+                        {errors.spdpPipeRate && (
                             <div className="invalid-feedback">
-                                {errors.trackPipeRate.message as string}
+                                {errors.spdpPipeRate.message as string}
                             </div>
                         )}
                     </div>
+                </div>
+                <div className="col-2">
+                    <label className="form-label">SP/DP Pipe Type</label>
+                    <div className="dropdown">
+                        <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {watch("spdpType")}
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-dark">
+                            {
+                                pipeDetail.map((type) => (
+                                    <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
+                                        e.preventDefault();
+                                        setValue("spdpType", type.pipeName);
+                                    }}>{type.pipeName}</a></li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    {errors.spdpPipeType && (
+                        <div className="text-danger small mt-1">
+                            {errors.spdpPipeType.message as string}
+                        </div>
+                    )}
                 </div>
                 <div className="col-2">
                     <label className="form-label">Track Weight (KG)</label>
                     <div className="input-group mb-3">
                         <input 
                             type="number" 
-                            className={`form-control ${errors.smallTrackPipeWeight ? 'is-invalid' : ''}`}
+                            className={`form-control ${errors.smallSpdpPipeWeight ? 'is-invalid' : ''}`}
                             placeholder="Weight" 
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("smallTrackPipeWeight", { valueAsNumber: true })}
+                            {...register("smallSpdpPipeWeight", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">180"</span>
-                        {errors.smallTrackPipeWeight && (
+                        {errors.smallSpdpPipeWeight && (
                             <div className="invalid-feedback">
-                                {errors.smallTrackPipeWeight.message as string}
+                                {errors.smallSpdpPipeWeight.message as string}
                             </div>
                         )}
                     </div>
                     <div className="input-group mb-3">
                         <input 
                             type="number" 
-                            className={`form-control ${errors.bigTrackPipeWeight ? 'is-invalid' : ''}`}
+                            className={`form-control ${errors.bigSpdpPipeWeight ? 'is-invalid' : ''}`}
                             placeholder="Weight" 
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("bigTrackPipeWeight", { valueAsNumber: true })}
+                            {...register("bigSpdpPipeWeight", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">192"</span>
-                        {errors.bigTrackPipeWeight && (
+                        {errors.bigSpdpPipeWeight && (
                             <div className="invalid-feedback">
-                                {errors.bigTrackPipeWeight.message as string}
+                                {errors.bigSpdpPipeWeight.message as string}
                             </div>
                         )}
                     </div>
@@ -132,10 +181,10 @@ export default function TrackDetail(props: TrackDetailProps ) {
                             <input
                                 className="form-check-input"
                                 type="checkbox"
-                                id="trackPipeSize180"
-                                {...register("trackPipeSize180")}
+                                id="spdpPipeSize180"
+                                {...register("spdpPipeSize180")}
                             />
-                            <label className="form-check-label" htmlFor="trackPipeSize180">
+                            <label className="form-check-label" htmlFor="spdpPipeSize180">
                                 180"
                             </label>
                         </div>
@@ -143,10 +192,10 @@ export default function TrackDetail(props: TrackDetailProps ) {
                             <input
                                 className="form-check-input"
                                 type="checkbox"
-                                id="trackPipeSize192"
-                                {...register("trackPipeSize192")}
+                                id="spdpPipeSize192"
+                                {...register("spdpPipeSize192")}
                             />
-                            <label className="form-check-label" htmlFor="trackPipeSize192">
+                            <label className="form-check-label" htmlFor="spdpPipeSize192">
                                 192"
                             </label>
                         </div>
@@ -164,17 +213,17 @@ export default function TrackDetail(props: TrackDetailProps ) {
                         <div className="input-group mb-3">
                             <input 
                                 type="number" 
-                                className={`form-control ${errors.extraTrackPipeLength ? 'is-invalid' : ''}`}
+                                className={`form-control ${errors.extraSpdpPipeLength ? 'is-invalid' : ''}`}
                                 placeholder="Track Length" 
                                 aria-label="track-length"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}
-                                {...register("extraTrackPipeLength", { valueAsNumber: true })}
+                                {...register("extraSpdpPipeLength", { valueAsNumber: true })}
                             />
                             <span className="input-group-text">Inch</span>
-                            {errors.extraTrackPipeLength && (
+                            {errors.extraSpdpPipeLength && (
                                 <div className="invalid-feedback">
-                                    {errors.extraTrackPipeLength.message as string}
+                                    {errors.extraSpdpPipeLength.message as string}
                                 </div>
                             )}
                         </div>

@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { PipeType } from "../../common/interfaces";
+import { PipeDetailType, PipeType } from "../../common/interfaces";
 import z from "zod";
 
 interface VChannelDetailProps {
     pipeType: PipeType[];
+    pipeDetail: PipeDetailType[];
 }
 
 export const vChannelSchema = z.object({
     vChannelType: z.string(),
     vChannelRate: z.number().min(1, "V-Channel rate must be greater than 0"),
-    vChannelWeight: z.number().min(1, "V-Channel weight must be greater than 0"),
+    smallVChannelWeight: z.number().min(1, "V-Channel weight must be greater than 0"),
+    bigVChannelWeight: z.number().min(1, "V-Channel weight must be greater than 0"),
     vChannelPipeSize180: z.boolean(),
     vChannelPipeSize192: z.boolean(),
     vChannelExtraLength: z.number().optional(),
@@ -26,6 +28,12 @@ export default function VChannelDetail(props: VChannelDetailProps) {
         setShowExtraTrack(!showExtraTrack);
         setValue("vChannelExtraLength", 0);
     }
+
+    useEffect(() => {
+        const vChannelPipeDetail = props.pipeDetail.find(pd => pd.pipeType === 'V-Channel');
+        setValue("smallVChannelWeight", vChannelPipeDetail?.pipeSizes[0].weight || 0);
+        setValue("bigVChannelWeight", vChannelPipeDetail?.pipeSizes[1].weight || 0);
+    }, [watch("vChannelType")]);
 
     useEffect(() => {
         setValue("vChannelRate", props.pipeType.find(pt => pt.color === watch("vChannelType"))?.ratePerKg || 0);
@@ -85,21 +93,38 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                 </div>
 
                 <div className="col-2">
-                    <label className="form-label">V-Channel Weight</label>
+                    <label className="form-label">V-Channel Weight (KG)</label>
                     <div className="input-group mb-3">
                         <input 
                             type="number" 
-                            className={`form-control ${errors.vChannelWeight ? 'is-invalid' : ''}`}
+                            className={`form-control ${errors.smallVChannelWeight ? 'is-invalid' : ''}`}
                             placeholder="Weight" 
                             aria-label="weight"
-                            step="1.00"
+                            step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("vChannelWeight", { valueAsNumber: true })}
+                            {...register("smallVChannelWeight", { valueAsNumber: true })}
                         />
-                        <span className="input-group-text">Kg</span>
-                        {errors.vChannelWeight && (
+                        <span className="input-group-text">180"</span>
+                        {errors.smallVChannelWeight && (
                             <div className="invalid-feedback">
-                                {errors.vChannelWeight.message as string}
+                                {errors.smallVChannelWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                    <div className="input-group mb-3">
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.bigVChannelWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight" 
+                            aria-label="weight"
+                            step="0.01"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("bigVChannelWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">192"</span>
+                        {errors.bigVChannelWeight && (
+                            <div className="invalid-feedback">
+                                {errors.bigVChannelWeight.message as string}
                             </div>
                         )}
                     </div>

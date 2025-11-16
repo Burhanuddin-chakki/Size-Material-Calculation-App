@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { PipeType } from "../../common/interfaces";
+import { PipeDetailType, PipeType } from "../../common/interfaces";
 
 interface ShutterDetailProps {
     pipeType: PipeType[];
+    pipeDetail: PipeDetailType[];
 }
 
 export const shutterPipeSchema = z.object({
     shutterTrackType: z.string(),
     shutterTrackRate: z.number().min(1, "Shutter track rate must be greater than 0"),
-    shutterTrackWeight: z.number().min(1, "Shutter track weight must be greater than 0"),
+    smallShutterTrackWeight: z.number().min(1, "Shutter track weight must be greater than 0"),
+    bigShutterTrackWeight: z.number().min(1, "Shutter track weight must be greater than 0"),
     shutterPipeSize180: z.boolean(),
     shutterPipeSize192: z.boolean(),
     shutterExtraTrackLength: z.number().optional(),
@@ -28,10 +30,16 @@ export default function ShutterDetail(props: ShutterDetailProps) {
     }
 
     useEffect(() => {
-            setValue("shutterTrackRate", props.pipeType.find(pt => pt.color === watch("shutterTrackType"))?.ratePerKg || 0);
-            setValue("shutterPipeSize180", true);
-            setValue("shutterPipeSize192", true);
-        }, [watch("shutterTrackType")]);
+        const shutterPipeDetail = props.pipeDetail.find(pd => pd.pipeType === 'Shutter');
+        setValue("smallShutterTrackWeight", shutterPipeDetail?.pipeSizes[0].weight || 0);
+        setValue("bigShutterTrackWeight", shutterPipeDetail?.pipeSizes[1].weight || 0);
+    }, [watch("shutterTrackType")]);
+
+    useEffect(() => {
+        setValue("shutterTrackRate", props.pipeType.find(pt => pt.color === watch("shutterTrackType"))?.ratePerKg || 0);
+        setValue("shutterPipeSize180", true);
+        setValue("shutterPipeSize192", true);
+    }, [watch("shutterTrackType")]);
 
     return (
         <>
@@ -85,21 +93,38 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                 </div>
 
                 <div className="col-2">
-                    <label className="form-label">Shutter Track Weight</label>
+                    <label className="form-label">Shutter Track Weight (KG)</label>
                     <div className="input-group mb-3">
                         <input
                             type="number"
-                            className={`form-control ${errors.shutterTrackWeight ? 'is-invalid' : ''}`}
+                            className={`form-control ${errors.smallShutterTrackWeight ? 'is-invalid' : ''}`}
                             placeholder="Weight"
                             aria-label="weight"
-                            step="1.00"
+                            step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("shutterTrackWeight", { valueAsNumber: true })}
+                            {...register("smallShutterTrackWeight", { valueAsNumber: true })}
                         />
-                        <span className="input-group-text">Kg</span>
-                        {errors.shutterTrackWeight && (
+                        <span className="input-group-text">180"</span>
+                        {errors.smallShutterTrackWeight && (
                             <div className="invalid-feedback">
-                                {errors.shutterTrackWeight.message as string}
+                                {errors.smallShutterTrackWeight.message as string}
+                            </div>
+                        )}
+                    </div>
+                    <div className="input-group mb-3">
+                        <input
+                            type="number"
+                            className={`form-control ${errors.bigShutterTrackWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight"
+                            aria-label="weight"
+                            step="0.01"
+                            onWheel={(e) => e.currentTarget.blur()}
+                            {...register("bigShutterTrackWeight", { valueAsNumber: true })}
+                        />
+                        <span className="input-group-text">192"</span>
+                        {errors.bigShutterTrackWeight && (
+                            <div className="invalid-feedback">
+                                {errors.bigShutterTrackWeight.message as string}
                             </div>
                         )}
                     </div>

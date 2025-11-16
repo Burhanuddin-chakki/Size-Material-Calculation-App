@@ -12,6 +12,10 @@ const materialSchema = new Schema({
     field: { type: String, required: true },
     unit: { type: String, required: true },
     rate: { type: Number, required: true },
+    type: [{
+        name: { type: String },
+        rate: { type: Number },
+    }],
     windowTypeId: { type: [Number], required: true },
 }, { timestamps: true });
 

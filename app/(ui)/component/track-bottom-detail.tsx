@@ -3,22 +3,20 @@ import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { PipeDetailType, PipeType } from "../../common/interfaces";
 
-interface InterLockDetailProps {
+interface TrackBottomDetailProps {
     pipeType: PipeType[];
-    pipeDetail: PipeDetailType[];
+    pipeDetail: PipeDetailType[] 
 }
-
-export const interLockPipeSchema = z.object({
-    interLockType: z.string(),
-    interLockRate: z.number().min(1, "InterLock rate must be greater than 0"),
-    smallInterLockWeight: z.number().min(1, "InterLock weight must be greater than 0"),
-    bigInterLockWeight: z.number().min(1, "InterLock weight must be greater than 0"),
-    interLockPipeSize180: z.boolean(),
-    interLockPipeSize192: z.boolean(),
-    interLockExtraLength: z.number().optional(),
-});
-
-export default function InterLockDetail(props: InterLockDetailProps) {
+export const trackBottomPipeSchema = z.object({
+    trackBottomPipeType: z.string(),
+    trackBottomPipeRate: z.number().min(1, "Track rate must be greater than 0"),
+    smallTrackBottomPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
+    bigTrackBottomPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
+    trackBottomPipeSize180: z.boolean(),
+    trackBottomPipeSize192: z.boolean(),
+    extraTrackBottomPipeLength: z.number().optional(),
+})
+export default function TrackBottomDetail(props: TrackBottomDetailProps ) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
 
@@ -26,47 +24,47 @@ export default function InterLockDetail(props: InterLockDetailProps) {
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("interLockExtraLength", 0);
+        setValue("extraTrackBottomPipeLength", 0);
     }
 
     useEffect(() => {
-        const interLockPipeDetail = props.pipeDetail.find(pd => pd.pipeType === 'InterLock');
-        setValue("smallInterLockWeight", interLockPipeDetail?.pipeSizes[0].weight || 0);
-        setValue("bigInterLockWeight", interLockPipeDetail?.pipeSizes[1].weight || 0);
-    }, [watch("interLockType")]);
+        const trackBottomPipeDetail = props.pipeDetail.find(pd => pd.pipeType === 'Track Bottom');
+        setValue("smallTrackBottomPipeWeight", trackBottomPipeDetail?.pipeSizes[0].weight || 0);
+        setValue("bigTrackBottomPipeWeight", trackBottomPipeDetail?.pipeSizes[1].weight || 0);
+    }, [watch("trackBottomPipeType")]);
 
     useEffect(() => {
-        setValue("interLockRate", props.pipeType.find(pt => pt.color === watch("interLockType"))?.ratePerKg || 0);
-        setValue("interLockPipeSize180", true);
-        setValue("interLockPipeSize192", true);
-    }, [watch("interLockType")]);
+        setValue("trackBottomPipeRate", props.pipeType.find(pt => pt.color === watch("trackBottomPipeType"))?.ratePerKg || 0);
+        setValue("trackBottomPipeSize180", true);
+        setValue("trackBottomPipeSize192", true);
+    }, [watch("trackBottomPipeType")]);
 
     return (
         <>
             <div className="row">
-                <h3>InterLock</h3>
+                <h3>Track Bottom</h3>
             </div>
             <div className="row mt-3">
                 <div className="col-2">
                     <label className="form-label">Track Type</label>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {watch("interLockType")}
+                            {watch("trackBottomPipeType")}
                         </button>
                         <ul className="dropdown-menu dropdown-menu-dark">
                             {
                                 props.pipeType.map((type) => (
                                     <li key={type.id}><a className="dropdown-item" href="#" onClick={(e) => {
                                         e.preventDefault();
-                                        setValue("interLockType", type.color);
+                                        setValue("trackBottomPipeType", type.color);
                                     }}>{type.color}</a></li>
                                 ))
                             }
                         </ul>
                     </div>
-                    {errors.interLockType && (
+                    {errors.trackBottomPipeType && (
                         <div className="text-danger small mt-1">
-                            {errors.interLockType.message as string}
+                            {errors.trackBottomPipeType.message as string}
                         </div>
                     )}
                 </div>
@@ -74,72 +72,70 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                 <div className="col-2">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
-                        <input
-                            type="number"
-                            className={`form-control ${errors.interLockRate ? 'is-invalid' : ''}`}
-                            placeholder="Rate"
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.trackBottomPipeRate ? 'is-invalid' : ''}`}
+                            placeholder="Rate" 
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("interLockRate", { valueAsNumber: true })}
+                            {...register("trackBottomPipeRate", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">$</span>
-                        {errors.interLockRate && (
+                        {errors.trackBottomPipeRate && (
                             <div className="invalid-feedback">
-                                {errors.interLockRate.message as string}
+                                {errors.trackBottomPipeRate.message as string}
                             </div>
                         )}
                     </div>
                 </div>
-
                 <div className="col-2">
-                    <label className="form-label">InterLock Weight (KG)</label>
+                    <label className="form-label">Track Weight (KG)</label>
                     <div className="input-group mb-3">
-                        <input
-                            type="number"
-                            className={`form-control ${errors.smallInterLockWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight"
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.smallTrackBottomPipeWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight" 
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("smallInterLockWeight", { valueAsNumber: true })}
+                            {...register("smallTrackBottomPipeWeight", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">180"</span>
-                        {errors.smallInterLockWeight && (
+                        {errors.smallTrackBottomPipeWeight && (
                             <div className="invalid-feedback">
-                                {errors.smallInterLockWeight.message as string}
+                                {errors.smallTrackBottomPipeWeight.message as string}
                             </div>
                         )}
                     </div>
                     <div className="input-group mb-3">
-                        <input
-                            type="number"
-                            className={`form-control ${errors.bigInterLockWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight"
+                        <input 
+                            type="number" 
+                            className={`form-control ${errors.bigTrackBottomPipeWeight ? 'is-invalid' : ''}`}
+                            placeholder="Weight" 
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
-                            {...register("bigInterLockWeight", { valueAsNumber: true })}
+                            {...register("bigTrackBottomPipeWeight", { valueAsNumber: true })}
                         />
                         <span className="input-group-text">192"</span>
-                        {errors.bigInterLockWeight && (
+                        {errors.bigTrackBottomPipeWeight && (
                             <div className="invalid-feedback">
-                                {errors.bigInterLockWeight.message as string}
+                                {errors.bigTrackBottomPipeWeight.message as string}
                             </div>
                         )}
                     </div>
                 </div>
-
                 <div className="col-1" style={{ marginTop: "1.5rem" }}>
                     <div className="d-flex flex-column">
                         <div className="form-check">
                             <input
                                 className="form-check-input"
                                 type="checkbox"
-                                id="interLockPipeSize180"
-                                {...register("interLockPipeSize180")}
+                                id="trackBottomPipeSize180"
+                                {...register("trackBottomPipeSize180")}
                             />
-                            <label className="form-check-label" htmlFor="interLockPipeSize180">
+                            <label className="form-check-label" htmlFor="trackBottomPipeSize180">
                                 180"
                             </label>
                         </div>
@@ -147,10 +143,10 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                             <input
                                 className="form-check-input"
                                 type="checkbox"
-                                id="interLockPipeSize192"
-                                {...register("interLockPipeSize192")}
+                                id="trackBottomPipeSize192"
+                                {...register("trackBottomPipeSize192")}
                             />
-                            <label className="form-check-label" htmlFor="interLockPipeSize192">
+                            <label className="form-check-label" htmlFor="trackBottomPipeSize192">
                                 192"
                             </label>
                         </div>
@@ -166,19 +162,19 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                     <div className="col-2">
                         <label className="form-label">Extra Track Length</label>
                         <div className="input-group mb-3">
-                            <input
-                                type="number"
-                                className={`form-control ${errors.interLockExtraLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length"
+                            <input 
+                                type="number" 
+                                className={`form-control ${errors.extraTrackBottomPipeLength ? 'is-invalid' : ''}`}
+                                placeholder="Track Length" 
                                 aria-label="track-length"
                                 step="1.00"
                                 onWheel={(e) => e.currentTarget.blur()}
-                                {...register("interLockExtraLength", { valueAsNumber: true })}
+                                {...register("extraTrackBottomPipeLength", { valueAsNumber: true })}
                             />
                             <span className="input-group-text">Inch</span>
-                            {errors.interLockExtraLength && (
+                            {errors.extraTrackBottomPipeLength && (
                                 <div className="invalid-feedback">
-                                    {errors.interLockExtraLength.message as string}
+                                    {errors.extraTrackBottomPipeLength.message as string}
                                 </div>
                             )}
                         </div>

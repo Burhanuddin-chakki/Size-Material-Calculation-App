@@ -123,3 +123,41 @@ img {
   padding-right: 15px;
   padding-left: 15px;
 }
+
+.window-fixed-top {
+    position: fixed;
+    padding: 1rem;
+    border: 1px solid #212529;
+    background-color: #212529;
+    color: white;
+    z-index: 1000;
+    top: 0px;
+    width: calc(100% - 300px);
+    left: 300px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* Responsive breakpoints for window-fixed-top */
+@media (max-width: 991px) {
+  .window-fixed-top {
+    width: 100%;
+    left: 0;
+    font-size: 1.25rem;
+    padding: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .window-fixed-top {
+    font-size: 1.125rem;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .window-fixed-top {
+    font-size: 1rem;
+    padding: 0.625rem;
+  }
+}
