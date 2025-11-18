@@ -14,8 +14,6 @@ export default function MaterialPrice({ materialWithType, materialWithoutType }:
     const { register, formState: { errors }, setValue, watch } = useFormContext();
 
     useEffect(() => {
-        console.log("MaterialWithType:", materialWithType);
-        console.log("MaterialWithoutType:", materialWithoutType);
         materialWithType.forEach((item: MaterialType) => {
             setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
             setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);

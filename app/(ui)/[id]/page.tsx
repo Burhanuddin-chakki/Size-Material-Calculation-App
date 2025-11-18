@@ -94,7 +94,6 @@ export default function WindowTypePage() {
         if (materialList.length > 0) {
             const withType: MaterialType[] = [];
             const withoutType: MaterialType[] = [];
-            // debugger
             materialList.forEach((item) => {
                 if (item.type && item.type.length > 0) {
                     if (item.field !== "uChannel") {
@@ -106,7 +105,6 @@ export default function WindowTypePage() {
                     withoutType.push(item);
                 }
             });
-            console.log("With Type Materials:", withType);
             setMaterialWithType(withType);
             setMaterialWithoutType(withoutType);
         }
@@ -188,12 +186,9 @@ export default function WindowTypePage() {
 
     // Functions Definition
     const onSubmit = async (data: FormData) => {
-        console.log("✅ Valid data", data);
         const inputObject: any = { ...data };
         inputObject['numberOfTrack'] = Number(numberOfTrack);
         setMaterialEstimationData(inputObject);
-        console.log("Input Object for Estimation:", inputObject);
-        // Here you can add your material estimation logic
         setShowEstimationDetailView(true);
     };
 

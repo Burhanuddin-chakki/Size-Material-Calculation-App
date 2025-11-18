@@ -153,14 +153,11 @@ function optimizePipesUtilisation(
     let isExtraPipeUsed = false;
 
     while (remainingCuts.length > 0) {
-        console.log(`\n--- Iteration with remaining cuts: [${remainingCuts.join(', ')}] ---`);
-
         // Get all possible combinations from remaining cuts
         const combinations = getAllSumCombinations(remainingCuts);
         const allPipeSizes = !isExtraPipeUsed && extraPipeSize[0] > 0 ? [...pipeSizes, ...extraPipeSize] : pipeSizes;
         // Find best combinations for each pipe size
         const bestOptions = findBestCombinations(combinations, allPipeSizes);
-        console.log('Best options for each pipe:', bestOptions);
 
         // Select the overall best option (least waste)
         let selectedOption = null;
@@ -179,14 +176,11 @@ function optimizePipesUtilisation(
 
         // If no valid combination found, break
         if (!selectedOption) {
-            console.log('No more valid combinations found. Stopping.');
             break;
         }
         if(!isExtraPipeUsed) {
             isExtraPipeUsed = extraPipeSize.includes(selectedOption.pipe);
         }
-
-        console.log(`Selected: Pipe ${selectedOption.pipe}, Cuts [${selectedOption.cuts.join(', ')}], Waste: ${selectedOption.waste}`);
 
         // Add to results
         results.push(selectedOption);
@@ -198,8 +192,6 @@ function optimizePipesUtilisation(
                 remainingCuts.splice(index, 1);
             }
         }
-
-        console.log(`Remaining cuts after removal: [${remainingCuts.join(', ')}]`);
     }
     const cuttingEstimation = getCuttingEstimation(results, minWaste);
     const {
