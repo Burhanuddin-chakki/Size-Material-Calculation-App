@@ -2,24 +2,60 @@
 
 import { fetchMaterialList, fetchPipeDetail, fetchPipeType, fetchWindowfromWindowId } from "@/app/api/window";
 import { MaterialType, PipeDetailType, PipeType } from "@/app/common/interfaces";
-import TrackDetail from "@/app/(ui)/component/track-detail";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
+import dynamic from "next/dynamic";
 import WindowDetail from "../component/window-detail";
-import ShutterDetail from "@/app/(ui)/component/shutter-detail";
-import InterLockDetail from "@/app/(ui)/component/interlock-detail";
-import VChannelDetail from "@/app/(ui)/component/vchannel-detail";
-import MaterialPrice from "@/app/(ui)/component/material-price";
-import EstimationDetail from "@/app/(ui)/component/estimation-detail";
-import SpdpDetail, { spdpPipeSchema } from "@/app/(ui)/component/spdp-detail";
 import { getDefaultFormValues, getSchemaForWindowsPipe } from "@/app/common/utility";
-import TrackTopDetail from "../component/track-top-detail";
-import TrackBottomDetail from "../component/track-bottom-detail";
-import HandleDetail from "../component/handle-detail";
-import LongBearingDetail from "../component/long-bearing-detail";
+import { spdpPipeSchema } from "@/app/(ui)/component/spdp-detail";
+
+// ✅ Code Splitting: Lazy load heavy components
+// These components are loaded only when needed (after user fills window details)
+const TrackDetail = dynamic(() => import("@/app/(ui)/component/track-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const ShutterDetail = dynamic(() => import("@/app/(ui)/component/shutter-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const InterLockDetail = dynamic(() => import("@/app/(ui)/component/interlock-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const VChannelDetail = dynamic(() => import("@/app/(ui)/component/vchannel-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const TrackTopDetail = dynamic(() => import("../component/track-top-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const TrackBottomDetail = dynamic(() => import("../component/track-bottom-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const HandleDetail = dynamic(() => import("../component/handle-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const LongBearingDetail = dynamic(() => import("../component/long-bearing-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const SpdpDetail = dynamic(() => import("@/app/(ui)/component/spdp-detail"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+const MaterialPrice = dynamic(() => import("@/app/(ui)/component/material-price"), {
+  loading: () => <div className="text-center p-3"><div className="spinner-border spinner-border-sm" role="status"></div></div>
+});
+
+// ✅ Estimation Detail is heavy - only load when user submits form
+const EstimationDetail = dynamic(() => import("@/app/(ui)/component/estimation-detail"), {
+  loading: () => (
+    <div className="d-flex justify-content-center align-items-center" style={{ height: "50vh" }}>
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading estimation...</span>
+      </div>
+    </div>
+  ),
+  ssr: false // Client-side only for complex calculations
+});
 
 const pipeTypeToComponentMapping: Record<string, Array<React.ComponentType<any>>> = {
     '3 Track Domal': [TrackDetail, ShutterDetail, InterLockDetail],
@@ -37,7 +73,7 @@ const pipeTypeToComponentMapping: Record<string, Array<React.ComponentType<any>>
 export default function WindowTypePage() {
 
     // variables
-    const [showAdditionalSections, setShowAdditionalSections] = useState(true);
+    const [showAdditionalSections, setShowAdditionalSections] = useState(false);
     const [showEstimationDetailView, setShowEstimationDetailView] = useState(false);
     const [numberOfTrack, setNumberOfTrack] = useState<number>(2);
     const [materialList, setMaterialList] = useState<MaterialType[]>([]);
@@ -162,13 +198,12 @@ export default function WindowTypePage() {
     };
 
     const openMaterialAdditionalSections = () => {
-        const formValues = methods.getValues();
-        if (formValues.height && formValues.width) {
-            setShowAdditionalSections(true);
-            return;
-        }
-        setShowAdditionalSections(false);
-
+        methods.trigger(['height', 'width'] as any).then((isValid) => {
+            if(isValid){
+                setShowAdditionalSections(true);
+                return;
+            }
+        })
     }
 
     async function getWindowDetail() {
@@ -222,8 +257,8 @@ export default function WindowTypePage() {
                 setIncludeSpDpSchema(false);
             }
 
-            return components.map((Component) => {
-                return <Component key={Component.name} pipeType={pipeType} pipeDetail={pipeDetail} />;
+            return components.map((Component,index) => {
+               return  <Component key={`component-${index}`} pipeType={pipeType} pipeDetail={pipeDetail} />;
             });
         }
         return [];

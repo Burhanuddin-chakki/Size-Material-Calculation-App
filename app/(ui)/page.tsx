@@ -23,7 +23,7 @@ export default function CreateEstimationPage() {
                 <h2 className="fw-bold mb-1" style={{ color: "#2c3e50" }}>Select Window Type</h2>
             </div>
             <div className="row g-4">
-                {windowTypes && windowTypes.map((type: any) => (
+                {windowTypes && windowTypes.map((type: any, index: number) => (
                     <div key={type.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
                         <Link href={`/${type.id}`} style={{ textDecoration: "none" }}>
                             <div className="card h-100 border-0 shadow-sm position-relative overflow-hidden" 
@@ -46,6 +46,11 @@ export default function CreateEstimationPage() {
                                         height={500} 
                                         className="card-img-top" 
                                         alt={type.windowType}
+                                        priority={index < 4}
+                                        quality={85}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                        placeholder="blur"
+                                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iI2VlZSIvPjwvc3ZnPg=="
                                         style={{ 
                                             width: "100%", 
                                             height: "100%", 
@@ -54,6 +59,7 @@ export default function CreateEstimationPage() {
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                        loading={index < 4 ? undefined : "lazy"}
                                     />
                                     <div className="position-absolute top-0 start-0 w-100 h-100" 
                                          style={{

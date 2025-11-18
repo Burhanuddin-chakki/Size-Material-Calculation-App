@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import {
     EstimationData,
     MaterialType,
@@ -24,9 +24,6 @@ interface MaterialEstimation {
     unit: string;
     totalPrice: number;
 }
-
-type windowType = '2 Track Domal' | 'Mini Domal' | 'Normal' | '18/60';
-
 interface MaterialPriceProps {
     materialList: MaterialType[];
     windowType: string;
@@ -35,16 +32,8 @@ interface MaterialPriceProps {
 
 
 export default function MaterialPrice({ materialList, windowType, inputData }: MaterialPriceProps) {
-    const [trackEstimationDetail, setTrackEstimationDetail] = useState<EstimationData | null>(null);
-    const [materialEstimationDetail, setMaterialEstimationDetail] = useState<MaterialEstimation[] | null>(null);
-    const allDomalTypes: string[] = ['3 Track Domal', '2 Track Domal', 'Mini Domal'];
-    const deepDomalType: string[] = ['Deep 3 Track Domal', 'Deep 2 Track Domal'];
-    const domalType: string[] = ['Domal', 'Deep Domal'];
-
-    const pipeSizes: number[] = [180, 192];
-    const vChannelPipeSizes: number[] = [180];
-    const weightPerInch = 0.065;
-
+    // ✅ No need for state - useMemo handles everything!
+    
     // const inputData: any = {
     //     "height": 48,
     //     "width": 72,
@@ -117,19 +106,14 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
 
 
 
-    const getMaterialEstimation = (): MaterialEstimation[] => {
+    // ✅ Memoized material estimation - recalculates only when deps change
+    const materialEstimationDetail = useMemo((): MaterialEstimation[] => {
         const materialEstimationList: MaterialEstimation[] = []
-        materialList.map((material) => {
+        materialList.forEach((material) => {
             let isMaterialEstimationNeeded = false
             if (material.field !== "macharJali" && material.field !== "grillJali" && material.field !== "uChannel" && material.field !== "screw25_6") {
                 isMaterialEstimationNeeded = true
             }
-            // if (material.field === "macharJali" && inputData.isContainMacharJali) {
-            //     isMaterialEstimationNeeded = true
-            // }
-            // if (material.field === "grillJali" && inputData.isContainGrillJali) {
-            //     isMaterialEstimationNeeded = true
-            // }
             if (material.field === "uChannel" && inputData.isContainMacharJali && !inputData.isContainGrillJali) {
                 isMaterialEstimationNeeded = true
             }
@@ -148,60 +132,51 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
             }
         })
         return materialEstimationList;
-    }
-
-
-
+    }, [materialList, inputData]);
 
     const calculateTrackTotalAmount = (trackEstimationDetail: EstimationData): number => {
-        return Object.entries(trackEstimationDetail).reduce((total, [key, estimation]) => {
+        return Math.round(Object.entries(trackEstimationDetail).reduce((total, [key, estimation]) => {
             return total + estimation.totalAmount;
-        }, 0);
+        }, 0) * 100)/100;
     }
 
     const calculateMaterialTotalAmount = (materialEstimationDetail: MaterialEstimation[]): number => {
-        return materialEstimationDetail.reduce((total, item) => {
+        return Math.round(materialEstimationDetail.reduce((total, item) => {
             return total + item.totalPrice;
-        }, 0);
+        }, 0)*100)/100;
     }
 
-    const getPipeEstimation = (): EstimationData => {
-        const trackEstimationDetail: EstimationData = {
+    // ✅ Memoized pipe estimation - recalculates only when deps change
+    const trackEstimationDetail = useMemo((): EstimationData => {
+        const estimation: EstimationData = {
             'Interlock': getInterLockCuttingEstimation(inputData)
         }
         if (/(Domal)/.test(windowType)) {
-            trackEstimationDetail['Track'] = getTrackCuttingEstimation(inputData);
-            trackEstimationDetail['Shutter'] = getShutterTrackCuttingEstimation(inputData);
+            estimation['Track'] = getTrackCuttingEstimation(inputData);
+            estimation['Shutter'] = getShutterTrackCuttingEstimation(inputData);
         }
         if (/(Deep)/.test(windowType)) {
-            trackEstimationDetail['V Channel'] = getVChannelCuttingEstimation(inputData);
+            estimation['V Channel'] = getVChannelCuttingEstimation(inputData);
         }
         if (/(18\/60|Normal)/.test(windowType)) {
-            trackEstimationDetail['Track Top'] = getTrackTopCuttingEstimation(inputData);
-            trackEstimationDetail['Track Bottom'] = getTrackBottomCuttingEstimation(inputData);
-            trackEstimationDetail['Handle'] = getHandleTrackCuttingEstimation(inputData);
-            trackEstimationDetail['Long Bearing'] = getLongBearingCuttingEstimation(inputData);
+            estimation['Track Top'] = getTrackTopCuttingEstimation(inputData);
+            estimation['Track Bottom'] = getTrackBottomCuttingEstimation(inputData);
+            estimation['Handle'] = getHandleTrackCuttingEstimation(inputData);
+            estimation['Long Bearing'] = getLongBearingCuttingEstimation(inputData);
         }
         if (inputData.selectedSpOrDpPipe === "SP" || inputData.selectedSpOrDpPipe === "DP") {
-            trackEstimationDetail[inputData.selectedSpOrDpPipe as "SP" | "DP"] = getSPDPTrackCuttingEstimation(inputData);
+            estimation[inputData.selectedSpOrDpPipe as "SP" | "DP"] = getSPDPTrackCuttingEstimation(inputData);
         }
-        return trackEstimationDetail;
-    }
+        return estimation;
+    }, [inputData, windowType]);
 
-    useEffect(() => {
-        const materialEstimation = getMaterialEstimation();
-        const trackEstimationDetail: EstimationData = getPipeEstimation();
-        setTrackEstimationDetail(trackEstimationDetail);
-        setMaterialEstimationDetail(materialEstimation);
-    }, []);
+    const showExtraPipeColumn = useMemo((): boolean => {
+        return Object.values(trackEstimationDetail).some(estimation => estimation.extraPipeSize && estimation.extraPipeSize > 0);
+    }, [trackEstimationDetail]);
 
-    const mergeCell = {
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
+
+
+
 
     return <>
         <div className="row main-container">
@@ -227,8 +202,8 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
                                     <tr key={`${key}-${idx}`}>
                                         {idx === 0 && (
                                             <>
-                                                <th scope="row" rowSpan={estimation.cuttingEstimation.length} style={{ height: '100px', padding: 0 }}><div style={mergeCell}>{key}</div></th>
-                                                <td rowSpan={estimation.cuttingEstimation.length} style={{ height: '100px', padding: 0 }}><div style={mergeCell}>{estimation.pipeType}</div></td>
+                                                <th scope="row" rowSpan={estimation.cuttingEstimation.length} style={{ height: '100px', padding: 0 }}><div className="merge-cell" >{key}</div></th>
+                                                <td rowSpan={estimation.cuttingEstimation.length} style={{ height: '100px', padding: 0 }}><div className="merge-cell">{estimation.pipeType}</div></td>
                                             </>
                                         )}
                                         <td>{`${item.pipeLength} Inches ->`}</td>
@@ -261,9 +236,13 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
                             <th scope="col" style={{ textAlign: 'center' }}>180 partial (Inches)</th>
                             <th scope="col" style={{ textAlign: 'center' }}>192 (full)</th>
                             <th scope="col" style={{ textAlign: 'center' }}>192 partial(Inches)</th>
-                            <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe Size(Inches)</th>
-                            <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe(full)</th>
-                            <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe Partial(Inches)</th>
+                            {showExtraPipeColumn && 
+                                <> 
+                                    <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe Size(Inches)</th>
+                                    <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe(full)</th>
+                                    <th scope="col" style={{ textAlign: 'center' }}>Extra Pipe Partial(Inches)</th>
+                                </>
+                            }
                             <th scope="col" style={{ textAlign: 'center' }}>Total Inches</th>
                             <th scope="col" style={{ textAlign: 'center' }}>Total weight (kg)</th>
                             <th scope="col" style={{ textAlign: 'center' }}>Rate/Kg</th>
@@ -281,9 +260,13 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
                                     <td>{estimation.partialSmallPipeInches}</td>
                                     <td>{estimation.fullLargePipeCount}</td>
                                     <td>{estimation.partialLargePipeInches}</td>
-                                    <td>{estimation.extraPipeSize || 0}</td>
-                                    <td>{estimation.fullExtraPipeCount}</td>
-                                    <td>{estimation.partialExtraPipeInches}</td>
+                                    {showExtraPipeColumn && 
+                                        <>
+                                            <td>{estimation.extraPipeSize || 0}</td>
+                                            <td>{estimation.fullExtraPipeCount}</td>
+                                            <td>{estimation.partialExtraPipeInches}</td>
+                                        </>
+                                    }
                                     <td>{estimation.totalInches}</td>
                                     <td>{estimation.totalWeight}</td>
                                     <td>{estimation.pipeRate}</td>
@@ -292,7 +275,7 @@ export default function MaterialPrice({ materialList, windowType, inputData }: M
                             )
                         }
                         <tr>
-                            <th colSpan={12} style={{ textAlign: 'center' }}>Total</th>
+                            <th colSpan={!showExtraPipeColumn ? 9 : 12} style={{ textAlign: 'center' }}>Total</th>
                             <th>{calculateTrackTotalAmount(trackEstimationDetail)}</th>
                         </tr>
                     </tbody>
