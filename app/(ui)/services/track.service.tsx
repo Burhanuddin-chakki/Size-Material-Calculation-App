@@ -147,7 +147,6 @@ function optimizePipesUtilisation(
     trackType: TrackType,
     minWaste = minWasteLimit
 ): PipeEstimation {
-    debugger
     const results: OptimizationResult[] = [];
     let remainingCuts = [...requiredCuts]; // Create a copy
     let isExtraPipeUsed = false;

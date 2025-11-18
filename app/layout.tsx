@@ -38,7 +38,7 @@ export default function RootLayout({
             <div className="col-auto">
               <SideNav />
             </div>
-            <div className="col" style={{ padding: "1.5rem 1.5rem 1.5rem 1rem" }}>
+            <div className="col" style={{ padding: "1.5rem 1.5rem 1.5rem 1rem", maxWidth: `calc(100% - 325px)`,position: "relative", left: "300px"}}>
               {children}
             </div>
                 
