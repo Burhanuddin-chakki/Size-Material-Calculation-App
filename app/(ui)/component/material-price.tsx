@@ -1,43 +1,30 @@
 import { useFormContext } from "react-hook-form";
 import { MaterialType } from "../../common/interfaces";
-import { useEffect, useState } from "react";
-import { z } from "zod";
+import { useEffect } from "react";
 
 interface MaterialPriceProps {
-    materialList: MaterialType[];
+    materialWithType: MaterialType[];
+    materialWithoutType: MaterialType[];
 }
 
 
 
-export default function MaterialPrice({ materialList }: MaterialPriceProps) {
+export default function MaterialPrice({ materialWithType, materialWithoutType }: MaterialPriceProps) {
 
     const { register, formState: { errors }, setValue, watch } = useFormContext();
-    const [materialWithType, setMaterialWithType] = useState<MaterialType[]>([]);
-    const [materialWithoutType, setMaterialWithoutType] = useState<MaterialType[]>([]);
 
     useEffect(() => {
-        const materialWithType: MaterialType[] = []
-        const materialWithoutType: MaterialType[] = [];
-        materialList.forEach((item) => {
-            if (item.type && item.type.length > 0) {
-                materialWithType.push(item);
-                setValue(`${item.field}_type`, item.type[0].name);
-                setValue(`${item.field}_rate`, item.type[0].rate);
-            } else {
-                materialWithoutType.push(item);
-                setValue(item.field, item.rate);
-            }
-        });
+        console.log("MaterialWithType:", materialWithType);
         console.log("MaterialWithoutType:", materialWithoutType);
-        setMaterialWithType(materialWithType);
-        setMaterialWithoutType(materialWithoutType);
-    }, []);
+        materialWithType.forEach((item: MaterialType) => {
+            setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
+            setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);
+        })
+        materialWithoutType.forEach((item: MaterialType) => {
+            setValue(item.field, item.rate);
+        });
+    }, [materialWithType, materialWithoutType]);
 
-    // useEffect(() => {
-    //     materialList.forEach((item) => {
-    //         setValue(item.field, item.rate);
-    //     });
-    // }, []);
 
     return (
         <>
@@ -100,7 +87,9 @@ export default function MaterialPrice({ materialList }: MaterialPriceProps) {
                 ))}
             </div>
 
-            <div className="row g-3 mt-3">
+            <hr/>
+
+            <div className="row g-3 mt-1">
                 {materialWithoutType.map((item) => (
                     <div key={item.field} className="col-12 col-sm-6 col-md-4 col-lg-3">
                         <label htmlFor={item.field} className="form-label">

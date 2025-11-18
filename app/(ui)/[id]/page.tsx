@@ -46,31 +46,59 @@ export default function WindowTypePage() {
     const [pipeDetail, setPipeDetail] = useState<PipeDetailType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [includeSpDpSchema, setIncludeSpDpSchema] = useState(false);
+    const [showUChannelSections, setShowUChannelSections] = useState(false);
+    const [materialWithType, setMaterialWithType] = useState<MaterialType[]>([]);
+    const [materialWithoutType, setMaterialWithoutType] = useState<MaterialType[]>([]);
+    const [materialEstimationData, setMaterialEstimationData] = useState<any>(null);
     const params = useParams();
     const windowId = params['id'];
 
-    // const updateMaterialList() {
-
-    // }
+    // Separate the material categorization into useEffect
+    useEffect(() => {
+        if (materialList.length > 0) {
+            const withType: MaterialType[] = [];
+            const withoutType: MaterialType[] = [];
+            // debugger
+            materialList.forEach((item) => {
+                if (item.type && item.type.length > 0) {
+                    if (item.field !== "uChannel") {
+                        withType.push(item);
+                    } else {
+                        showUChannelSections && withType.push(item);
+                    }
+                } else {
+                    withoutType.push(item);
+                }
+            });
+            console.log("With Type Materials:", withType);
+            setMaterialWithType(withType);
+            setMaterialWithoutType(withoutType);
+        }
+    }, [materialList, showUChannelSections]);
 
     const getMaterialSchema = () => {
         let schema = z.object({});
         materialList.forEach((item) => {
             if (item.type && item.type.length > 0) {
-                schema = schema.extend({
-                    [`${item.field}_type`]: z.string(),
-                    [`${item.field}_rate`]: z.number().min(1, `${item.label} rate must be at least 1`),
-                });
-            //     materialWithType.push(item);
-                // setValue(item.field, item.rate);
+                if (item.field !== "uChannel") {
+                    schema = schema.extend({
+                        [`${item.field}_type`]: z.string(),
+                        [`${item.field}_rate`]: z.number().min(1, `${item.label} rate must be at least 1`),
+                    });
+                } else {
+                    if (showUChannelSections) {
+                        schema = schema.extend({
+                            [`${item.field}_type`]: z.string(),
+                            [`${item.field}_rate`]: z.number().min(1, `${item.label} rate must be at least 1`),
+                        });
+                    }
+                }
+
             } else {
                 schema = schema.extend({
                     [item.field]: z.number().min(1, `${item.label} rate must be at least 1`),
                 });
-                // materialWithoutType.push(item);
-                // setValue(item.field, item.rate);
             }
-            
         });
         return schema;
     };
@@ -91,7 +119,7 @@ export default function WindowTypePage() {
         }
 
         return schema;
-    }, [windowType, materialList, includeSpDpSchema]);
+    }, [windowType, materialList, includeSpDpSchema, showUChannelSections]);
 
     type FormData = z.infer<typeof parentSchema>;
 
@@ -118,17 +146,18 @@ export default function WindowTypePage() {
     }, [parentSchema, isLoading, methods]);
 
     useEffect(() => {
-
+        setShowUChannelSections(showUChannelDetail);
     }, [showUChannelDetail]);
 
 
     // Functions Definition
     const onSubmit = async (data: FormData) => {
         console.log("✅ Valid data", data);
-        const inputObject = { ...data };
+        const inputObject: any = { ...data };
+        inputObject['numberOfTrack'] = Number(numberOfTrack);
+        setMaterialEstimationData(inputObject);
         console.log("Input Object for Estimation:", inputObject);
         // Here you can add your material estimation logic
-        alert(JSON.stringify(inputObject, null, 2));
         setShowEstimationDetailView(true);
     };
 
@@ -167,8 +196,6 @@ export default function WindowTypePage() {
         setIsLoading(true);
         try {
             await Promise.all([getWindowDetail(), getMaterialList(), getPipeType(), getPipeDetail()]);
-            console.log("Pipe Detail:", pipeDetail);
-            console.log("Material List:", materialList);
         } catch (error) {
             console.error("Error loading data:", error);
         } finally {
@@ -232,9 +259,28 @@ export default function WindowTypePage() {
 
     return (
         <>
-        <div className="window-fixed-top text-center">
-            <h4 className="mb-0">{windowType}</h4>
-        </div>
+            <div className="window-fixed-top text-center">
+                {showEstimationDetailView ? <button 
+                        className="btn btn-light position-absolute start-0 ms-3 d-flex align-items-center gap-2" 
+                        onClick={() => setShowEstimationDetailView(false)}
+                        style={{ 
+                            border: "1px solid rgba(255,255,255,0.2)",
+                            transition: "all 0.2s ease"
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.2)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = "";
+                        }}
+                    >
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        Back
+                    </button> : null}
+                <h4 className="mb-0">{windowType}</h4>
+            </div>
             {!showEstimationDetailView ? <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="row main-container" style={{ marginTop: "70px" }}>
@@ -251,7 +297,7 @@ export default function WindowTypePage() {
 
                         {/* Material Prices */}
                         <div className="row main-container" style={{ marginTop: "1.5rem" }}>
-                            <MaterialPrice materialList={materialList} />
+                            <MaterialPrice materialWithType={materialWithType} materialWithoutType={materialWithoutType} />
                         </div>
 
                         <div className="row main-container" style={{ marginTop: "1.5rem" }}>
@@ -264,9 +310,9 @@ export default function WindowTypePage() {
             </FormProvider>
                 :
                 <div style={{ marginTop: "70px" }}>
-                    <EstimationDetail materialList={materialList} />
+                    <EstimationDetail materialList={materialList} windowType={windowType} inputData={materialEstimationData} />
                 </div>
-                }
+            }
         </>
     );
 }

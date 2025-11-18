@@ -13,11 +13,11 @@ import { longBearingPipeSchema } from "../(ui)/component/long-bearing-detail";
 export const getSchemaForWindowsPipe = (windowType: string) => {
     let schema = z.object({});
     schema = schema.extend({
+        ...windowInputSchema.shape,
         ...interLockPipeSchema.shape,
     });
     if (/(Domal)/.test(windowType)) {
         schema = schema.extend({
-            ...windowInputSchema.shape,
             ...trackPipeSchema.shape,
             ...shutterPipeSchema.shape,
         });
