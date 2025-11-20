@@ -64,8 +64,7 @@ export default function TrackDetail(props: TrackDetailProps) {
   useEffect(() => {
     setValue(
       "trackPipeRate",
-      props.pipeType.find((pt) => pt.color === trackPipeType)
-        ?.ratePerKg || 0,
+      props.pipeType.find((pt) => pt.color === trackPipeType)?.ratePerKg || 0,
     );
     setValue("trackPipeSize180", true);
     setValue("trackPipeSize192", true);

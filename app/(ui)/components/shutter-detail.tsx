@@ -76,8 +76,8 @@ export default function ShutterDetail(props: ShutterDetailProps) {
   useEffect(() => {
     setValue(
       "shutterTrackRate",
-      props.pipeType.find((pt) => pt.color === shutterTrackType)
-        ?.ratePerKg || 0,
+      props.pipeType.find((pt) => pt.color === shutterTrackType)?.ratePerKg ||
+        0,
     );
     setValue("shutterPipeSize180", true);
     setValue("shutterPipeSize192", true);

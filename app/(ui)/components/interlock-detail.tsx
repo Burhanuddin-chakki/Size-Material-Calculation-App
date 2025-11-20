@@ -74,8 +74,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
   useEffect(() => {
     setValue(
       "interLockRate",
-      props.pipeType.find((pt) => pt.color === interLockType)
-        ?.ratePerKg || 0,
+      props.pipeType.find((pt) => pt.color === interLockType)?.ratePerKg || 0,
     );
     setValue("interLockPipeSize180", true);
     setValue("interLockPipeSize192", true);

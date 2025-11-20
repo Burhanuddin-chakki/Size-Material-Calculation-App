@@ -66,14 +66,14 @@ export default function TrackTopDetail(props: TrackTopDetailProps) {
       trackTopPipeDetail?.pipeSizes[1].weight || 0,
     );
   }, [props.pipeDetail, setValue]);
-  
+
   const trackTopPipeType = watch("trackTopPipeType");
 
   useEffect(() => {
     setValue(
       "trackTopPipeRate",
-      props.pipeType.find((pt) => pt.color === trackTopPipeType)
-        ?.ratePerKg || 0,
+      props.pipeType.find((pt) => pt.color === trackTopPipeType)?.ratePerKg ||
+        0,
     );
     setValue("trackTopPipeSize180", true);
     setValue("trackTopPipeSize192", true);

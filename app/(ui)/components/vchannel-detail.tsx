@@ -66,13 +66,12 @@ export default function VChannelDetail(props: VChannelDetailProps) {
     setValue("bigVChannelWeight", vChannelPipeDetail?.pipeSizes[1].weight || 0);
   }, [props.pipeDetail, setValue]);
 
-    const vChannelType = watch("vChannelType");
+  const vChannelType = watch("vChannelType");
 
   useEffect(() => {
     setValue(
       "vChannelRate",
-      props.pipeType.find((pt) => pt.color === vChannelType)
-        ?.ratePerKg || 0,
+      props.pipeType.find((pt) => pt.color === vChannelType)?.ratePerKg || 0,
     );
     setValue("vChannelPipeSize180", true);
     setValue("vChannelPipeSize192", true);

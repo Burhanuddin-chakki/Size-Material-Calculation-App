@@ -346,7 +346,8 @@ function optimizePipesUtilisation(
 
   const totalInches = calculateTotalInches(cuttingEstimation);
   const totalWeight = getTotalWeight(cuttingEstimation, trackType, inputData);
-  const totalAmount = totalWeight * inputData[pipeTypeRateAndWeightMapping[trackType][1]];
+  const totalAmount =
+    totalWeight * inputData[pipeTypeRateAndWeightMapping[trackType][1]];
   const finalEstimation: PipeEstimation = {
     pipeType:
       trackType !== "spdp"
@@ -528,12 +529,9 @@ export const calculateTrackTotalAmount = (
 ): number => {
   return (
     Math.round(
-      Object.entries(trackEstimationDetail).reduce(
-        (total, [, estimation]) => {
-          return total + estimation.totalAmount;
-        },
-        0,
-      ) * 100,
+      Object.entries(trackEstimationDetail).reduce((total, [, estimation]) => {
+        return total + estimation.totalAmount;
+      }, 0) * 100,
     ) / 100
   );
 };
