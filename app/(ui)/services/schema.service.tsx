@@ -11,109 +11,122 @@ import { handlePipeSchema } from "../components/handle-detail";
 import { longBearingPipeSchema } from "../components/long-bearing-detail";
 
 export const getSchemaForWindowsPipe = (windowType: string) => {
-    let schema = z.object({});
+  let schema = z.object({});
+  schema = schema.extend({
+    ...windowInputSchema.shape,
+    ...interLockPipeSchema.shape,
+  });
+  if (/(Domal)/.test(windowType)) {
     schema = schema.extend({
-        ...windowInputSchema.shape,
-        ...interLockPipeSchema.shape,
+      ...trackPipeSchema.shape,
+      ...shutterPipeSchema.shape,
     });
-    if (/(Domal)/.test(windowType)) {
-        schema = schema.extend({
-            ...trackPipeSchema.shape,
-            ...shutterPipeSchema.shape,
-        });
-    }
-    if (/(Deep)/.test(windowType)) {
-        schema = schema.extend({
-            ...vChannelSchema.shape,
-        });
-    }
-    if (/(18\/60|Normal)/.test(windowType)) {
-        schema = schema.extend({
-            ...trackTopPipeSchema.shape,
-            ...trackBottomPipeSchema.shape,
-            ...handlePipeSchema.shape,
-            ...longBearingPipeSchema.shape,
-        });
-    }
+  }
+  if (/(Deep)/.test(windowType)) {
+    schema = schema.extend({
+      ...vChannelSchema.shape,
+    });
+  }
+  if (/(18\/60|Normal)/.test(windowType)) {
+    schema = schema.extend({
+      ...trackTopPipeSchema.shape,
+      ...trackBottomPipeSchema.shape,
+      ...handlePipeSchema.shape,
+      ...longBearingPipeSchema.shape,
+    });
+  }
 
-    return schema;
+  return schema;
 };
 
-export const getDefaultFormValues = (windowType: string, pipeType: PipeType[]) => {
-    let defaults: any = {
-        height: 0,
-        width: 0,
-        numberOfDoors: 2,
-        isContainMacharJali: true,
-        isContainGrillJali: true,
-        selectedSpOrDpPipe: "none",
-        interLockType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-        interLockRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-        interLockExtraLength: []
+export const getDefaultFormValues = (
+  windowType: string,
+  pipeType: PipeType[],
+) => {
+  let defaults: any = {
+    height: 0,
+    width: 0,
+    numberOfDoors: 2,
+    isContainMacharJali: true,
+    isContainGrillJali: true,
+    selectedSpOrDpPipe: "none",
+    interLockType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+    interLockRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+    interLockExtraLength: [],
+  };
+  if (/(Domal)/.test(windowType)) {
+    defaults = {
+      ...defaults,
+      trackPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      trackPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      extraTrackPipeLength: [],
+      shutterTrackType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      shutterTrackRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      shutterExtraTrackLength: [],
     };
-    if (/(Domal)/.test(windowType)) {
-        defaults = {
-            ...defaults,
-            trackPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            trackPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            extraTrackPipeLength: [],
-            shutterTrackType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            shutterTrackRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            shutterExtraTrackLength: [],
-        };
-    }
-    if (/(Deep)/.test(windowType)) {
-        defaults = {
-            ...defaults,
-            vChannelType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            vChannelRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            vChannelExtraLength: [],
-        };
-    }
-    if (/(18\/60|Normal)/.test(windowType)) {
-        defaults = {
-            ...defaults,
-            trackTopPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            trackTopPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            extraTrackTopPipeLength: [],
-            trackBottomPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            trackBottomPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            extraTrackBottomPipeLength: [],
-            handlePipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            handlePipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            extraHandlePipeLength: [],
-            longBearingPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
-            longBearingPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
-            extraLongBearingPipeLength: [],
-        };
-    }
+  }
+  if (/(Deep)/.test(windowType)) {
+    defaults = {
+      ...defaults,
+      vChannelType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      vChannelRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      vChannelExtraLength: [],
+    };
+  }
+  if (/(18\/60|Normal)/.test(windowType)) {
+    defaults = {
+      ...defaults,
+      trackTopPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      trackTopPipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      extraTrackTopPipeLength: [],
+      trackBottomPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      trackBottomPipeRate:
+        pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      extraTrackBottomPipeLength: [],
+      handlePipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      handlePipeRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      extraHandlePipeLength: [],
+      longBearingPipeType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
+      longBearingPipeRate:
+        pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
+      extraLongBearingPipeLength: [],
+    };
+  }
 
-    return defaults;
+  return defaults;
 };
 
-export const getMaterialSchema = (materialList: MaterialType[], showUChannelSections: boolean) => {
-        let schema = z.object({});
-        materialList.forEach((item) => {
-            if (item.type && item.type.length > 0) {
-                if (item.field !== "uChannel") {
-                    schema = schema.extend({
-                        [`${item.field}_type`]: z.string(),
-                        [`${item.field}_rate`]: z.number().min(1, `${item.label} rate must be at least 1`),
-                    });
-                } else {
-                    if (showUChannelSections) {
-                        schema = schema.extend({
-                            [`${item.field}_type`]: z.string(),
-                            [`${item.field}_rate`]: z.number().min(1, `${item.label} rate must be at least 1`),
-                        });
-                    }
-                }
-
-            } else {
-                schema = schema.extend({
-                    [item.field]: z.number().min(1, `${item.label} rate must be at least 1`),
-                });
-            }
+export const getMaterialSchema = (
+  materialList: MaterialType[],
+  showUChannelSections: boolean,
+) => {
+  let schema = z.object({});
+  materialList.forEach((item) => {
+    if (item.type && item.type.length > 0) {
+      if (item.field !== "uChannel") {
+        schema = schema.extend({
+          [`${item.field}_type`]: z.string(),
+          [`${item.field}_rate`]: z
+            .number()
+            .min(1, `${item.label} rate must be at least 1`),
         });
-        return schema;
-    };
+      } else {
+        if (showUChannelSections) {
+          schema = schema.extend({
+            [`${item.field}_type`]: z.string(),
+            [`${item.field}_rate`]: z
+              .number()
+              .min(1, `${item.label} rate must be at least 1`),
+          });
+        }
+      }
+    } else {
+      schema = schema.extend({
+        [item.field]: z
+          .number()
+          .min(1, `${item.label} rate must be at least 1`),
+      });
+    }
+  });
+  return schema;
+};

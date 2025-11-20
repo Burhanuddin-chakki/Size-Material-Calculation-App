@@ -30,7 +30,12 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Size & Material Calculation App</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossOrigin="anonymous"/>
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <div>
@@ -38,16 +43,26 @@ export default function RootLayout({
             <div className="col-auto">
               <SideNav />
             </div>
-            <div className="col" style={{ padding: "1.5rem 1.5rem 1.5rem 1rem", maxWidth: `calc(100% - 325px)`,position: "relative", left: "300px"}}>
+            <div
+              className="col"
+              style={{
+                padding: "1.5rem 1.5rem 1.5rem 1rem",
+                maxWidth: `calc(100% - 325px)`,
+                position: "relative",
+                left: "300px",
+              }}
+            >
               {children}
             </div>
-                
           </div>
         </div>
         {/* <Navbar /> */}
-        
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossOrigin="anonymous"></script>
+
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+          crossOrigin="anonymous"
+        ></script>
       </body>
     </html>
   );

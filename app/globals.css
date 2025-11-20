@@ -76,7 +76,7 @@ body {
 }
 
 /* Add some breathing room to columns */
-.row > [class*='col-'] {
+.row > [class*="col-"] {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
@@ -125,17 +125,17 @@ img {
 }
 
 .window-fixed-top {
-    position: fixed;
-    padding: 1rem;
-    border: 1px solid #212529;
-    background-color: #212529;
-    color: white;
-    z-index: 1000;
-    top: 0px;
-    width: calc(100% - 300px);
-    left: 300px;
-    text-align: center;
-    font-size: 1.5rem;
+  position: fixed;
+  padding: 1rem;
+  border: 1px solid #212529;
+  background-color: #212529;
+  color: white;
+  z-index: 1000;
+  top: 0px;
+  width: calc(100% - 300px);
+  left: 300px;
+  text-align: center;
+  font-size: 1.5rem;
 }
 
 /* Responsive breakpoints for window-fixed-top */
@@ -163,9 +163,9 @@ img {
 }
 
 .merge-cell {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
