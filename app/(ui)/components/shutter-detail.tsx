@@ -69,17 +69,19 @@ export default function ShutterDetail(props: ShutterDetailProps) {
       "bigShutterTrackWeight",
       shutterPipeDetail?.pipeSizes[1].weight || 0,
     );
-  }, [watch("shutterTrackType")]);
+  }, [props.pipeDetail, setValue]);
+
+  const shutterTrackType = watch("shutterTrackType");
 
   useEffect(() => {
     setValue(
       "shutterTrackRate",
-      props.pipeType.find((pt) => pt.color === watch("shutterTrackType"))
+      props.pipeType.find((pt) => pt.color === shutterTrackType)
         ?.ratePerKg || 0,
     );
     setValue("shutterPipeSize180", true);
     setValue("shutterPipeSize192", true);
-  }, [watch("shutterTrackType")]);
+  }, [shutterTrackType, setValue, props.pipeType]);
 
   return (
     <>

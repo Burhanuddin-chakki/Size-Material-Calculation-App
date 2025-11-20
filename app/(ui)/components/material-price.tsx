@@ -26,7 +26,7 @@ export default function MaterialPrice({
     materialWithoutType.forEach((item: MaterialType) => {
       setValue(item.field, item.rate);
     });
-  }, [materialWithType, materialWithoutType]);
+  }, [materialWithType, materialWithoutType, setValue]);
 
   return (
     <>

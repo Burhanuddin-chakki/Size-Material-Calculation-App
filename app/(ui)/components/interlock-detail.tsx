@@ -67,17 +67,19 @@ export default function InterLockDetail(props: InterLockDetailProps) {
       "bigInterLockWeight",
       interLockPipeDetail?.pipeSizes[1].weight || 0,
     );
-  }, [watch("interLockType")]);
+  }, [props.pipeDetail, setValue]);
+
+  const interLockType = watch("interLockType");
 
   useEffect(() => {
     setValue(
       "interLockRate",
-      props.pipeType.find((pt) => pt.color === watch("interLockType"))
+      props.pipeType.find((pt) => pt.color === interLockType)
         ?.ratePerKg || 0,
     );
     setValue("interLockPipeSize180", true);
     setValue("interLockPipeSize192", true);
-  }, [watch("interLockType")]);
+  }, [interLockType, setValue, props.pipeType]);
 
   return (
     <>

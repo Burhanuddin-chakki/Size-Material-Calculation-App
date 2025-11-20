@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import WindowTypePage from "../[id]/page";
 
 export const windowInputSchema = z.object({
   height: z.number().min(1, "Height must be at least 1 inch"),

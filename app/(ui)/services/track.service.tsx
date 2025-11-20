@@ -281,9 +281,9 @@ function optimizePipesUtilisation(
   minWaste = minWasteLimit,
 ): PipeEstimation {
   const results: OptimizationResult[] = [];
-  let remainingCuts = [...requiredCuts]; // Create a copy
+  const remainingCuts = [...requiredCuts]; // Create a copy
   let remainingPipeSizes = [...extraPipeSize];
-  let usedExtraSizes: number[] = [];
+  const usedExtraSizes: number[] = [];
   while (remainingCuts.length > 0) {
     // Get all possible combinations from remaining cuts
     const combinations = getAllSumCombinations(remainingCuts);
@@ -298,7 +298,7 @@ function optimizePipesUtilisation(
     let selectedOption = null;
     let bestWaste = Infinity;
 
-    for (let option of bestOptions) {
+    for (const option of bestOptions) {
       if (option.bestCombo && option.leastWaste < bestWaste) {
         bestWaste = option.leastWaste;
         selectedOption = {
@@ -327,7 +327,7 @@ function optimizePipesUtilisation(
     results.push(selectedOption);
 
     // Remove used cuts from remaining cuts
-    for (let cut of selectedOption.cuts) {
+    for (const cut of selectedOption.cuts) {
       const index = remainingCuts.indexOf(cut);
       if (index !== -1) {
         remainingCuts.splice(index, 1);
@@ -387,7 +387,7 @@ function getAllSumCombinations(numbers: number[]): CombinationResult[] {
   // Optional: remove duplicates (since 48,48 repeats)
   const unique: CombinationResult[] = [];
   const seen = new Set();
-  for (let item of results) {
+  for (const item of results) {
     const key = item.combination
       .slice()
       .sort((a, b) => a - b)
@@ -406,11 +406,11 @@ function findBestCombinations(
   pipeSizes: number[],
 ): BestCombinationOption[] {
   const results: BestCombinationOption[] = [];
-  for (let pipe of pipeSizes) {
+  for (const pipe of pipeSizes) {
     let bestCombo: CombinationResult | null = null;
     let leastWaste = Infinity;
 
-    for (let item of combinations) {
+    for (const item of combinations) {
       const total = item.sum;
       if (total <= pipe) {
         const waste = pipe - total;
@@ -529,7 +529,7 @@ export const calculateTrackTotalAmount = (
   return (
     Math.round(
       Object.entries(trackEstimationDetail).reduce(
-        (total, [key, estimation]) => {
+        (total, [, estimation]) => {
           return total + estimation.totalAmount;
         },
         0,

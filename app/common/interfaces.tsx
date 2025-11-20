@@ -1,5 +1,3 @@
-import { keyof } from "zod";
-
 export interface WindowType {
   id: number;
   windowType: string;

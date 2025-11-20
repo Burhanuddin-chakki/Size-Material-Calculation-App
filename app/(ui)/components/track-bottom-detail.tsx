@@ -65,17 +65,19 @@ export default function TrackBottomDetail(props: TrackBottomDetailProps) {
       "bigTrackBottomPipeWeight",
       trackBottomPipeDetail?.pipeSizes[1].weight || 0,
     );
-  }, [watch("trackBottomPipeType")]);
+  }, [props.pipeDetail, setValue]);
+
+  const trackBottomPipeType = watch("trackBottomPipeType");
 
   useEffect(() => {
     setValue(
       "trackBottomPipeRate",
-      props.pipeType.find((pt) => pt.color === watch("trackBottomPipeType"))
+      props.pipeType.find((pt) => pt.color === trackBottomPipeType)
         ?.ratePerKg || 0,
     );
     setValue("trackBottomPipeSize180", true);
     setValue("trackBottomPipeSize192", true);
-  }, [watch("trackBottomPipeType")]);
+  }, [trackBottomPipeType, setValue, props.pipeType]);
 
   return (
     <>

@@ -64,17 +64,19 @@ export default function VChannelDetail(props: VChannelDetailProps) {
       vChannelPipeDetail?.pipeSizes[0].weight || 0,
     );
     setValue("bigVChannelWeight", vChannelPipeDetail?.pipeSizes[1].weight || 0);
-  }, [watch("vChannelType")]);
+  }, [props.pipeDetail, setValue]);
+
+    const vChannelType = watch("vChannelType");
 
   useEffect(() => {
     setValue(
       "vChannelRate",
-      props.pipeType.find((pt) => pt.color === watch("vChannelType"))
+      props.pipeType.find((pt) => pt.color === vChannelType)
         ?.ratePerKg || 0,
     );
     setValue("vChannelPipeSize180", true);
     setValue("vChannelPipeSize192", true);
-  }, [watch("vChannelType")]);
+  }, [vChannelType, setValue, props.pipeType]);
 
   return (
     <>

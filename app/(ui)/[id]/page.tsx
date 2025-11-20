@@ -63,7 +63,6 @@ export default function WindowTypePage() {
     pipeType,
     pipeDetail,
     isLoading,
-    includeSpDpSchema,
     setIncludeSpDpSchema,
     materialWithType,
     materialWithoutType,

@@ -67,17 +67,19 @@ export default function LongBearingDetail(props: LongBearingDetailProps) {
       "bigLongBearingPipeWeight",
       longBearingPipeDetail?.pipeSizes[1].weight || 0,
     );
-  }, [watch("longBearingPipeType")]);
+  }, [props.pipeDetail, setValue]);
+
+  const longBearingPipeType = watch("longBearingPipeType");
 
   useEffect(() => {
     setValue(
       "longBearingPipeRate",
-      props.pipeType.find((pt) => pt.color === watch("longBearingPipeType"))
+      props.pipeType.find((pt) => pt.color === longBearingPipeType)
         ?.ratePerKg || 0,
     );
     setValue("longBearingPipeSize180", true);
     setValue("longBearingPipeSize192", true);
-  }, [watch("longBearingPipeType")]);
+  }, [longBearingPipeType, setValue, props.pipeType]);
 
   return (
     <>

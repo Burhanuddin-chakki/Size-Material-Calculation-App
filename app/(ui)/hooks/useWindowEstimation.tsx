@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -49,8 +49,8 @@ export const useWindowEstimation = (windowId: number) => {
         if (item.type && item.type.length > 0) {
           if (item.field !== "uChannel") {
             withType.push(item);
-          } else {
-            showUChannelSections && withType.push(item);
+          } else if (showUChannelSections) {
+            withType.push(item);
           }
         } else {
           withoutType.push(item);
@@ -110,7 +110,7 @@ export const useWindowEstimation = (windowId: number) => {
   }, [showUChannelDetail]);
 
   // Data fetching
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [windowDetail, materials, pipes, details] = await Promise.all([
@@ -130,11 +130,11 @@ export const useWindowEstimation = (windowId: number) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [windowId]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Reset form after data loads
   useEffect(() => {
@@ -145,7 +145,7 @@ export const useWindowEstimation = (windowId: number) => {
         keepValues: false,
       });
     }
-  }, [isLoading, materialList]);
+  }, [isLoading, windowType, pipeType, methods]);
 
   // Handlers
   const onSubmit = async (data: FormData) => {

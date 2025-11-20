@@ -57,22 +57,21 @@ export default function HandleDetail(props: HandleDetailProps) {
     const handlePipeDetail = props.pipeDetail.find(
       (pd) => pd.pipeType === "Handle",
     );
-    setValue(
-      "smallHandlePipeWeight",
-      handlePipeDetail?.pipeSizes[0].weight || 0,
-    );
+    setValue("smallHandlePipeWeight", handlePipeDetail?.pipeSizes[0].weight || 0);
     setValue("bigHandlePipeWeight", handlePipeDetail?.pipeSizes[1].weight || 0);
-  }, [watch("handlePipeType")]);
+  }, [props.pipeDetail, setValue]);
+
+  const handlePipeType = watch("handlePipeType");
 
   useEffect(() => {
     setValue(
       "handlePipeRate",
-      props.pipeType.find((pt) => pt.color === watch("handlePipeType"))
+      props.pipeType.find((pt) => pt.color === handlePipeType)
         ?.ratePerKg || 0,
     );
     setValue("handlePipeSize180", true);
     setValue("handlePipeSize192", true);
-  }, [watch("handlePipeType")]);
+  }, [handlePipeType, setValue, props.pipeType]);
 
   return (
     <>

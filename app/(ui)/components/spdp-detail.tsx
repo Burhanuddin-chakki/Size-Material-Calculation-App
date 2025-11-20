@@ -61,20 +61,19 @@ export default function SpdpDetail(props: spdpDetailProps) {
   // Filter pipe details based on selected SP or DP
   const pipeDetail = useMemo(() => {
     return props.pipeDetail.filter((pd) => pd.pipeType === selectedSpOrDpPipe);
-  }, [selectedSpOrDpPipe]);
+  }, [props.pipeDetail, selectedSpOrDpPipe]);
 
   // Initialize default values when component mounts or selectedSpOrDpPipe changes
   useEffect(() => {
-    // if (selectedSpOrDpPipe && props.pipeType.length > 0) {
     setValue("spdpPipeType", props.pipeType[0]?.color || "");
     setValue("spdpPipeSize180", true);
     setValue("spdpPipeSize192", true);
     setValue("extraSpdpPipeLength", []);
-    // }
+
     if (pipeDetail.length > 0) {
       setValue("spdpType", pipeDetail[0]?.pipeName || "");
     }
-  }, [pipeDetail]);
+  }, [pipeDetail, props.pipeType, setValue]);
 
   // Update weight when spdpType changes
   useEffect(() => {
@@ -86,7 +85,7 @@ export default function SpdpDetail(props: spdpDetailProps) {
       );
       setValue("bigSpdpPipeWeight", spdpPipeDetail?.pipeSizes[1]?.weight || 0);
     }
-  }, [spdpType, pipeDetail]);
+  }, [spdpType, pipeDetail, setValue]);
 
   // Update rate when spdpPipeType changes
   useEffect(() => {
