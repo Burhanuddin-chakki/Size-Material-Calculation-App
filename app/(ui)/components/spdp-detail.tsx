@@ -5,7 +5,7 @@ import { PipeDetailType, PipeType } from "../../common/interfaces";
 
 interface spdpDetailProps {
     pipeType: PipeType[];
-    pipeDetail: PipeDetailType[] 
+    pipeDetail: PipeDetailType[]
 }
 export const spdpPipeSchema = z.object({
     spdpPipeType: z.string(),
@@ -15,19 +15,32 @@ export const spdpPipeSchema = z.object({
     spdpType: z.string(),
     spdpPipeSize180: z.boolean(),
     spdpPipeSize192: z.boolean(),
-    extraSpdpPipeLength: z.number().optional(),
+    extraSpdpPipeLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 })
-export default function SpdpDetail(props: spdpDetailProps ) {
+export default function SpdpDetail(props: spdpDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("extraSpdpPipeLength", 0);
+        setValue("extraSpdpPipeLength", []);
     }
-    
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("extraSpdpPipeLength") || [];
+            setValue("extraSpdpPipeLength", currentValues.slice(0, -1));
+        }
+    }
+
     const selectedSpOrDpPipe = (watch as any)("selectedSpOrDpPipe") as "SP" | "DP" | "none" | undefined;
     const spdpPipeType = watch("spdpPipeType");
     const spdpType = watch("spdpType");
@@ -35,19 +48,20 @@ export default function SpdpDetail(props: spdpDetailProps ) {
     // Filter pipe details based on selected SP or DP
     const pipeDetail = useMemo(() => {
         return props.pipeDetail.filter(pd => pd.pipeType === selectedSpOrDpPipe);
-    }, [ selectedSpOrDpPipe ]);
+    }, [selectedSpOrDpPipe]);
 
     // Initialize default values when component mounts or selectedSpOrDpPipe changes
     useEffect(() => {
         // if (selectedSpOrDpPipe && props.pipeType.length > 0) {
-            setValue("spdpPipeType", props.pipeType[0]?.color || "");
-            setValue("spdpPipeSize180", true);
-            setValue("spdpPipeSize192", true);
+        setValue("spdpPipeType", props.pipeType[0]?.color || "");
+        setValue("spdpPipeSize180", true);
+        setValue("spdpPipeSize192", true);
+        setValue("extraSpdpPipeLength", []);
         // }
         if (pipeDetail.length > 0) {
             setValue("spdpType", pipeDetail[0]?.pipeName || "");
         }
-    }, [ pipeDetail]);
+    }, [pipeDetail]);
 
     // Update weight when spdpType changes
     useEffect(() => {
@@ -98,10 +112,10 @@ export default function SpdpDetail(props: spdpDetailProps ) {
                 <div className="col-2">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.spdpPipeRate ? 'is-invalid' : ''}`}
-                            placeholder="Rate" 
+                            placeholder="Rate"
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -141,10 +155,10 @@ export default function SpdpDetail(props: spdpDetailProps ) {
                 <div className="col-2">
                     <label className="form-label">Track Weight (KG)</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.smallSpdpPipeWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight" 
+                            placeholder="Weight"
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -158,10 +172,10 @@ export default function SpdpDetail(props: spdpDetailProps ) {
                         )}
                     </div>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.bigSpdpPipeWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight" 
+                            placeholder="Weight"
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -208,26 +222,44 @@ export default function SpdpDetail(props: spdpDetailProps ) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra Track Length</label>
-                        <div className="input-group mb-3">
-                            <input 
-                                type="number" 
-                                className={`form-control ${errors.extraSpdpPipeLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length" 
-                                aria-label="track-length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("extraSpdpPipeLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.extraSpdpPipeLength && (
-                                <div className="invalid-feedback">
-                                    {errors.extraSpdpPipeLength.message as string}
+                    <>
+                        <div className="row">
+                            {Array.from({ length: extraTrackCount }).map((_, index) => (
+                                <div className="col-2" key={index}>
+                                    <label className="form-label">Extra SP/DP {index + 1}</label>
+                                    <div className="input-group mb-3">
+                                        <input
+                                            type="number"
+                                            className={`form-control ${(errors.extraSpdpPipeLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                            placeholder="SP/DP Length"
+                                            aria-label="spdp-length"
+                                            step="1.00"
+                                            onWheel={(e) => e.currentTarget.blur()}
+                                            {...register(`extraSpdpPipeLength.${index}`, { valueAsNumber: true })}
+                                        />
+                                        <span className="input-group-text">Inch</span>
+                                        {(errors.extraSpdpPipeLength as any)?.[index] && (
+                                            <div className="invalid-feedback">
+                                                {(errors.extraSpdpPipeLength as any)[index]?.message as string}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+
+
+                        <div className="col-12 mt-2">
+                            <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                                + Add Extra SP/DP
+                            </button>
+                            {extraTrackCount > 1 && (
+                                <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                    - Remove Extra SP/DP
+                                </button>
                             )}
                         </div>
-                    </div>
+                    </>
                 }
             </div>
         </>

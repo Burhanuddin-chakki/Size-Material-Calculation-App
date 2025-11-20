@@ -5,7 +5,7 @@ import { PipeDetailType, PipeType } from "../../common/interfaces";
 
 interface TrackDetailProps {
     pipeType: PipeType[];
-    pipeDetail: PipeDetailType[] 
+    pipeDetail: PipeDetailType[]
 }
 export const trackPipeSchema = z.object({
     trackPipeType: z.string(),
@@ -14,17 +14,30 @@ export const trackPipeSchema = z.object({
     bigTrackPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
     trackPipeSize180: z.boolean(),
     trackPipeSize192: z.boolean(),
-    extraTrackPipeLength: z.number().optional(),
+    extraTrackPipeLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 })
-export default function TrackDetail(props: TrackDetailProps ) {
+export default function TrackDetail(props: TrackDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("extraTrackPipeLength", 0);
+        setValue("extraTrackPipeLength", []);
+    }
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("extraTrackPipeLength") || [];
+            setValue("extraTrackPipeLength", currentValues.slice(0, -1));
+        }
     }
 
     useEffect(() => {
@@ -72,10 +85,10 @@ export default function TrackDetail(props: TrackDetailProps ) {
                 <div className="col-2">
                     <label className="form-label">Track Rate</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.trackPipeRate ? 'is-invalid' : ''}`}
-                            placeholder="Rate" 
+                            placeholder="Rate"
                             aria-label="rate"
                             step="1.00"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -92,10 +105,10 @@ export default function TrackDetail(props: TrackDetailProps ) {
                 <div className="col-2">
                     <label className="form-label">Track Weight (KG)</label>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.smallTrackPipeWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight" 
+                            placeholder="Weight"
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -109,10 +122,10 @@ export default function TrackDetail(props: TrackDetailProps ) {
                         )}
                     </div>
                     <div className="input-group mb-3">
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             className={`form-control ${errors.bigTrackPipeWeight ? 'is-invalid' : ''}`}
-                            placeholder="Weight" 
+                            placeholder="Weight"
                             aria-label="weight"
                             step="0.01"
                             onWheel={(e) => e.currentTarget.blur()}
@@ -159,26 +172,43 @@ export default function TrackDetail(props: TrackDetailProps ) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra Track Length</label>
-                        <div className="input-group mb-3">
-                            <input 
-                                type="number" 
-                                className={`form-control ${errors.extraTrackPipeLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length" 
-                                aria-label="track-length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("extraTrackPipeLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.extraTrackPipeLength && (
-                                <div className="invalid-feedback">
-                                    {errors.extraTrackPipeLength.message as string}
+                    <>
+                        <div className="row">
+                            {Array.from({ length: extraTrackCount }).map((_, index) => (
+                                <div className="col-2" key={index}>
+                                    <label className="form-label">Extra Track {index + 1}</label>
+                                    <div className="input-group mb-3">
+                                        <input
+                                            type="number"
+                                            className={`form-control ${(errors.extraTrackPipeLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                            placeholder="Track Length"
+                                            aria-label="track-length"
+                                            step="1.00"
+                                            onWheel={(e) => e.currentTarget.blur()}
+                                            {...register(`extraTrackPipeLength.${index}`, { valueAsNumber: true })}
+                                        />
+                                        <span className="input-group-text">Inch</span>
+                                        {(errors.extraTrackPipeLength as any)?.[index] && (
+                                            <div className="invalid-feedback">
+                                                {(errors.extraTrackPipeLength as any)[index]?.message as string}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+                        <div className="col-12 mt-2">
+                            <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                                + Add Extra Track
+                            </button>
+                            {extraTrackCount > 1 && (
+                                <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                    - Remove Extra Track
+                                </button>
                             )}
                         </div>
-                    </div>
+                    </>
+
                 }
             </div>
         </>

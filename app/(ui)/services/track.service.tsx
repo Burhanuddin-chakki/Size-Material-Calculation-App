@@ -2,6 +2,7 @@ import {
     BestCombinationOption,
     CombinationResult,
     CuttingEstimation,
+    EstimationData,
     OptimizationResult,
     PipeEstimation,
     TrackType
@@ -10,8 +11,8 @@ import { getNoOfPannels } from "./material.service";
 
 const minWasteLimit = 36;
 const pipeTypeRateAndWeightMapping: Record<TrackType, string[]> = {
-    'track': ["trackPipeType", "trackPipeRate", "smallTrackPipeWeight", "bigTrackPipeWeight","trackPipeSize180", "trackPipeSize192"],
-    'shutter': ["shutterTrackType", "shutterTrackRate", "smallShutterTrackWeight"," bigShutterTrackWeight", "shutterPipeSize180", "shutterPipeSize192"],
+    'track': ["trackPipeType", "trackPipeRate", "smallTrackPipeWeight", "bigTrackPipeWeight", "trackPipeSize180", "trackPipeSize192"],
+    'shutter': ["shutterTrackType", "shutterTrackRate", "smallShutterTrackWeight", " bigShutterTrackWeight", "shutterPipeSize180", "shutterPipeSize192"],
     'interlock': ["interLockType", "interLockRate", "smallInterLockWeight", "bigInterLockWeight", "interLockPipeSize180", "interLockPipeSize192"],
     'vchannel': ["vChannelType", "vChannelRate", "smallVChannelWeight", "bigVChannelWeight", "vChannelPipeSize180", "vChannelPipeSize192"],
     'trackTop': ["trackTopPipeType", "trackTopPipeRate", "smallTrackTopPipeWeight", "bigTrackTopPipeWeight", "trackTopPipeSize180", "trackTopPipeSize192"],
@@ -38,55 +39,56 @@ export const getTrackCuttingEstimation = (inputData: any): PipeEstimation => {
     const trackRequireCuts = getTrackRequiredCuts(inputData);
     const trackPipeSizes: number[] = getPipeSizes(inputData, 'track');
 
-    return optimizePipesUtilisation(trackRequireCuts, trackPipeSizes, [inputData.extraTrackPipeLength], inputData, 'track');
+    return optimizePipesUtilisation(trackRequireCuts, trackPipeSizes, inputData.extraTrackPipeLength, inputData, 'track');
 
 }
 
 export const getTrackTopCuttingEstimation = (inputData: any): PipeEstimation => {
     const trackRequireCuts = getTrackTopRequiredCuts(inputData);
     const trackTopPipeSizes: number[] = getPipeSizes(inputData, 'trackTop');
-    return optimizePipesUtilisation(trackRequireCuts, trackTopPipeSizes, [inputData.extraTrackTopPipeLength], inputData, 'trackTop');
+    return optimizePipesUtilisation(trackRequireCuts, trackTopPipeSizes, inputData.extraTrackTopPipeLength, inputData, 'trackTop');
 
 }
 export const getTrackBottomCuttingEstimation = (inputData: any): PipeEstimation => {
     const trackRequireCuts = getTrackBottomRequiredCuts(inputData);
     const trackBottomPipeSizes: number[] = getPipeSizes(inputData, 'trackBottom');
-    return optimizePipesUtilisation(trackRequireCuts, trackBottomPipeSizes, [inputData.extraTrackBottomPipeLength], inputData, 'trackBottom');
+    return optimizePipesUtilisation(trackRequireCuts, trackBottomPipeSizes, inputData.extraTrackBottomPipeLength, inputData, 'trackBottom');
 
 }
 export const getHandleTrackCuttingEstimation = (inputData: any): PipeEstimation => {
     const handleRequireCuts = getHandleTrackRequiredCuts(inputData);
     const handlePipeSizes: number[] = getPipeSizes(inputData, 'handle');
-    return optimizePipesUtilisation(handleRequireCuts, handlePipeSizes, [inputData.extraTrackHandlePipeLength], inputData, 'handle');
+    return optimizePipesUtilisation(handleRequireCuts, handlePipeSizes, inputData.extraHandlePipeLength, inputData, 'handle');
 }
 
 export const getLongBearingCuttingEstimation = (inputData: any): PipeEstimation => {
     const handleRequireCuts = getLongBearingRequiredCuts(inputData);
     const longBearingPipeSizes: number[] = getPipeSizes(inputData, 'longBearing');
-    return optimizePipesUtilisation(handleRequireCuts, longBearingPipeSizes, [inputData.extraTrackLongBearingPipeLength], inputData, 'longBearing');
+    return optimizePipesUtilisation(handleRequireCuts, longBearingPipeSizes, inputData.extraLongBearingPipeLength, inputData, 'longBearing');
 }
 
 export const getShutterTrackCuttingEstimation = (inputData: any): PipeEstimation => {
     const shutterTrackRequireCuts = getShutterTrackRequiredCuts(inputData);
     const shutterPipeSizes: number[] = getPipeSizes(inputData, 'shutter');
-    return optimizePipesUtilisation(shutterTrackRequireCuts, shutterPipeSizes, [inputData.shutterExtraTrackLength], inputData, 'shutter');
+    return optimizePipesUtilisation(shutterTrackRequireCuts, shutterPipeSizes, inputData.shutterExtraTrackLength, inputData, 'shutter');
 }
 
 export const getInterLockCuttingEstimation = (inputData: any): PipeEstimation => {
     const interLockRequireCuts = getInterLockRequiredCuts(inputData);
     const interLockPipeSizes: number[] = getPipeSizes(inputData, 'interlock');
-    return optimizePipesUtilisation(interLockRequireCuts, interLockPipeSizes, [inputData.interLockExtraLength], inputData, 'interlock');
+    debugger
+    return optimizePipesUtilisation(interLockRequireCuts, interLockPipeSizes, inputData.interLockExtraLength, inputData, 'interlock');
 }
 
 export const getVChannelCuttingEstimation = (inputData: any): PipeEstimation => {
     const vChannelRequireCuts = getVChannelRequiredCuts(inputData);
     const vChannelPipeSizes: number[] = getPipeSizes(inputData, 'vchannel');
-    return optimizePipesUtilisation(vChannelRequireCuts, vChannelPipeSizes, [inputData.vChannelExtraLength], inputData, 'vchannel');
+    return optimizePipesUtilisation(vChannelRequireCuts, vChannelPipeSizes, inputData.vChannelExtraLength, inputData, 'vchannel');
 }
 export const getSPDPTrackCuttingEstimation = (inputData: any): PipeEstimation => {
     const spdpRequireCuts = getTrackRequiredCuts(inputData);
     const spdpPipeSizes: number[] = getPipeSizes(inputData, 'spdp');
-    return optimizePipesUtilisation(spdpRequireCuts, spdpPipeSizes, [inputData.extraSpdpPipeLength], inputData, 'spdp');
+    return optimizePipesUtilisation(spdpRequireCuts, spdpPipeSizes, inputData.extraSpdpPipeLength, inputData, 'spdp');
 
 }
 
@@ -149,12 +151,12 @@ function optimizePipesUtilisation(
 ): PipeEstimation {
     const results: OptimizationResult[] = [];
     let remainingCuts = [...requiredCuts]; // Create a copy
-    let isExtraPipeUsed = false;
-
+    let remainingPipeSizes = [...extraPipeSize]
+    let usedExtraSizes: number[] = [];
     while (remainingCuts.length > 0) {
         // Get all possible combinations from remaining cuts
         const combinations = getAllSumCombinations(remainingCuts);
-        const allPipeSizes = !isExtraPipeUsed && extraPipeSize[0] > 0 ? [...pipeSizes, ...extraPipeSize] : pipeSizes;
+        const allPipeSizes = remainingPipeSizes[0] > 0 ? [...pipeSizes, ...remainingPipeSizes] : pipeSizes;
         // Find best combinations for each pipe size
         const bestOptions = findBestCombinations(combinations, allPipeSizes);
 
@@ -177,9 +179,15 @@ function optimizePipesUtilisation(
         if (!selectedOption) {
             break;
         }
-        if(!isExtraPipeUsed) {
-            isExtraPipeUsed = extraPipeSize.includes(selectedOption.pipe);
-        }
+
+        remainingPipeSizes = remainingPipeSizes.filter(size => {
+            if (size !== selectedOption!.pipe) {
+                return true;
+            }else{
+                usedExtraSizes.push(size);
+                return false;
+            }
+        });
 
         // Add to results
         results.push(selectedOption);
@@ -205,7 +213,7 @@ function optimizePipesUtilisation(
     const totalInches = calculateTotalInches(cuttingEstimation);
     const totalWeight = getTotalWeight(cuttingEstimation, trackType, inputData);
     const totalAmount = totalWeight * inputData[pipeTypeRateAndWeightMapping[trackType][1]]
-    
+    debugger
     const finalEstimation: PipeEstimation = {
         pipeType: trackType !== 'spdp' ? inputData[pipeTypeRateAndWeightMapping[trackType][0]] : `${inputData[pipeTypeRateAndWeightMapping[trackType][6]]} / ${inputData[pipeTypeRateAndWeightMapping[trackType][0]]}`,
         pipeRate: inputData[pipeTypeRateAndWeightMapping[trackType][1]],
@@ -217,7 +225,7 @@ function optimizePipesUtilisation(
         fullLargePipeCount: fullLargePipeCount,
         fullExtraPipeCount: fullExtraPipeCount,
         partialExtraPipeInches: partialExtraPipeInches,
-        extraPipeSize: extraPipeSize[0],
+        extraPipeSize: usedExtraSizes,
         totalWeight: totalWeight,    //Later inches x weight per inch
         totalAmount: Math.round(totalAmount * 100) / 100,    // Later total weight x rate
         cuttingEstimation: cuttingEstimation
@@ -323,7 +331,7 @@ const getPipeCountAndInches = (data: CuttingEstimation[]): {
                 fullSmallPipeCount += 1;
             } else if (item.pipeLength === 192) {
                 fullLargePipeCount += 1;
-            } else{
+            } else {
                 fullExtraPipeCount += 1;
             }
 
@@ -351,7 +359,7 @@ const getTotalWeight = (cuttingEstimation: CuttingEstimation[], trackType: Track
     let totalWeight = 0;
     cuttingEstimation.forEach(item => {
         const index = item.pipeLength === 180 ? 2 : 3;
-        const weightPerInch = (inputData[pipeTypeRateAndWeightMapping[trackType][index]])/item.pipeLength; // Example weights
+        const weightPerInch = (inputData[pipeTypeRateAndWeightMapping[trackType][index]]) / item.pipeLength; // Example weights
         if (item.full) {
             totalWeight += item.pipeLength * weightPerInch;
         } else if (item.partial) {
@@ -360,4 +368,10 @@ const getTotalWeight = (cuttingEstimation: CuttingEstimation[], trackType: Track
         }
     });
     return Math.round(totalWeight * 100) / 100;
+}
+
+export const calculateTrackTotalAmount = (trackEstimationDetail: EstimationData): number => {
+    return Math.round(Object.entries(trackEstimationDetail).reduce((total, [key, estimation]) => {
+        return total + estimation.totalAmount;
+    }, 0) * 100) / 100;
 }

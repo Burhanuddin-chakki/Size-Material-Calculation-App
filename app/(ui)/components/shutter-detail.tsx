@@ -15,18 +15,31 @@ export const shutterPipeSchema = z.object({
     bigShutterTrackWeight: z.number().min(1, "Shutter track weight must be greater than 0"),
     shutterPipeSize180: z.boolean(),
     shutterPipeSize192: z.boolean(),
-    shutterExtraTrackLength: z.number().optional(),
+    shutterExtraTrackLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 });
 
 export default function ShutterDetail(props: ShutterDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("shutterExtraTrackLength", 0);
+        setValue("shutterExtraTrackLength", []);
+    }
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("shutterExtraTrackLength") || [];
+            setValue("shutterExtraTrackLength", currentValues.slice(0, -1));
+        }
     }
 
     useEffect(() => {
@@ -163,26 +176,44 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra Track Length</label>
-                        <div className="input-group mb-3">
-                            <input
-                                type="number"
-                                className={`form-control ${errors.shutterExtraTrackLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length"
-                                aria-label="track-length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("shutterExtraTrackLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.shutterExtraTrackLength && (
-                                <div className="invalid-feedback">
-                                    {errors.shutterExtraTrackLength.message as string}
+                    <>
+                        <div className="row">
+                            {Array.from({ length: extraTrackCount }).map((_, index) => (
+                                <div className="col-2" key={index}>
+                                    <label className="form-label">Extra Shutter {index + 1}</label>
+                                    <div className="input-group mb-3">
+                                        <input
+                                            type="number"
+                                            className={`form-control ${(errors.shutterExtraTrackLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                            placeholder="Shutter Length"
+                                            aria-label="shutter-length"
+                                            step="1.00"
+                                            onWheel={(e) => e.currentTarget.blur()}
+                                            {...register(`shutterExtraTrackLength.${index}`, { valueAsNumber: true })}
+                                        />
+                                        <span className="input-group-text">Inch</span>
+                                        {(errors.shutterExtraTrackLength as any)?.[index] && (
+                                            <div className="invalid-feedback">
+                                                {(errors.shutterExtraTrackLength as any)[index]?.message as string}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+
+
+                        <div className="col-12 mt-2">
+                            <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                                + Add Extra Shutter
+                            </button>
+                            {extraTrackCount > 1 && (
+                                <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                    - Remove Extra Shutter
+                                </button>
                             )}
                         </div>
-                    </div>
+                    </>
                 }
             </div>
         </>

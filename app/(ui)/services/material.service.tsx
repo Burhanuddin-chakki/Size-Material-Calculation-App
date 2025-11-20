@@ -1,4 +1,4 @@
-import { MaterialEstimationResult } from "@/app/common/interfaces";
+import { MaterialEstimation, MaterialEstimationResult } from "@/app/common/interfaces";
 
 export const handleMaterialFunction = (field: string, inputData: any): MaterialEstimationResult => {
     const functionMapping: { [key: string]: (inputData: any) => MaterialEstimationResult } = {
@@ -67,7 +67,7 @@ const getScrew13_6Quantity = (inputData: any): MaterialEstimationResult => {
 const getPvcBrushQuantity = (inputData: any): MaterialEstimationResult => {
     return { quantity: 1, rate: inputData.pvcBrush, totalPrice: inputData.pvcBrush };
 }
-const getGlassQuantity = (inputData: any): MaterialEstimationResult=> {
+const getGlassQuantity = (inputData: any): MaterialEstimationResult => {
     const partitionWidth = inputData.width / inputData.numberOfDoors;
     const noOfGlassDoor = inputData.isContainMacharJali ? getNoOfPannels(inputData) - 1 : getNoOfPannels(inputData);
     const quantity = getRoundFeet(inputData.height) * getRoundFeet(partitionWidth) * noOfGlassDoor;
@@ -116,7 +116,7 @@ const getKekdaQuantity = (inputData: any): MaterialEstimationResult => {
 const getMaleFemaleQuantity = (inputData: any): MaterialEstimationResult => {
     return { quantity: getNoOfPannels(inputData), rate: inputData.maleFemale, totalPrice: getNoOfPannels(inputData) * inputData.maleFemale };
 }
-const getWaterGuideQuantity = (inputData: any): MaterialEstimationResult=> {
+const getWaterGuideQuantity = (inputData: any): MaterialEstimationResult => {
     return { quantity: 2, rate: inputData.waterGuide, totalPrice: 2 * inputData.waterGuide };
 }
 const getMacharJaliQuantity = (inputData: any): { quantity: number, rate: number } => {
@@ -143,8 +143,8 @@ const selectJaliPannel = (size: number, panelSizes: number[]): number => {
         if (size === panelSizes[i]) {
             selectedSize = panelSizes[i];
             break;
-        } else if (panelSizes[i+1] > size) {
-            selectedSize = panelSizes[i+1];
+        } else if (panelSizes[i + 1] > size) {
+            selectedSize = panelSizes[i + 1];
             break;
         }
     }
@@ -160,21 +160,21 @@ const selectJaliPannel = (size: number, panelSizes: number[]): number => {
  * @returns Object with selected panel size, dimension used, and total square footage
  */
 export const calculateOptimalSqft = (
-    heightInches: number, 
-    widthInches: number, 
+    heightInches: number,
+    widthInches: number,
     panelSizes: number[] = [2, 2.5, 3, 3.5, 3.75, 4, 4.5, 5]
 ): { panelSize: number; basedOn: 'height' | 'width'; sqft: number } => {
     const heightFeet = heightInches / 12;
     const widthFeet = widthInches / 12;
-    
+
     // Option 1: Select panel based on height
     const panelByHeight = selectJaliPannel(heightFeet, panelSizes);
     const sqftByHeight = panelByHeight * widthFeet;
-    
+
     // Option 2: Select panel based on width
     const panelByWidth = selectJaliPannel(widthFeet, panelSizes);
     const sqftByWidth = panelByWidth * heightFeet;
-    
+
     // Return the option with minimum square footage (most profitable)
     if (sqftByHeight <= sqftByWidth) {
         return {
@@ -189,4 +189,10 @@ export const calculateOptimalSqft = (
             sqft: Math.round(sqftByWidth * 100) / 100 // Round to 2 decimal places
         };
     }
+}
+
+export const calculateMaterialTotalAmount = (materialEstimationDetail: MaterialEstimation[]): number => {
+    return Math.round(materialEstimationDetail.reduce((total, item) => {
+        return total + item.totalPrice;
+    }, 0) * 100) / 100;
 }

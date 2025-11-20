@@ -14,17 +14,30 @@ export const trackTopPipeSchema = z.object({
     bigTrackTopPipeWeight: z.number().min(1, "Track weight must be greater than 0"),
     trackTopPipeSize180: z.boolean(),
     trackTopPipeSize192: z.boolean(),
-    extraTrackTopPipeLength: z.number().optional(),
+    extraTrackTopPipeLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 })
 export default function TrackTopDetail(props: TrackTopDetailProps ) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("extraTrackTopPipeLength", 0);
+        setValue("extraTrackTopPipeLength", []);
+    }
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("extraTrackTopPipeLength") || [];
+            setValue("extraTrackTopPipeLength", currentValues.slice(0, -1));
+        }
     }
 
     useEffect(() => {
@@ -159,26 +172,44 @@ export default function TrackTopDetail(props: TrackTopDetailProps ) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra Track Length</label>
-                        <div className="input-group mb-3">
-                            <input 
-                                type="number" 
-                                className={`form-control ${errors.extraTrackTopPipeLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length" 
-                                aria-label="track-length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("extraTrackTopPipeLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.extraTrackTopPipeLength && (
-                                <div className="invalid-feedback">
-                                    {errors.extraTrackTopPipeLength.message as string}
-                                </div>
-                            )}
+                <>
+                <div className="row">
+                    {Array.from({ length: extraTrackCount }).map((_, index) => (
+                        <div className="col-2" key={index}>
+                            <label className="form-label">Extra Track Top {index + 1}</label>
+                            <div className="input-group mb-3">
+                                <input 
+                                    type="number" 
+                                    className={`form-control ${(errors.extraTrackTopPipeLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                    placeholder="Track Top Length" 
+                                    aria-label="track-top-length"
+                                    step="1.00"
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    {...register(`extraTrackTopPipeLength.${index}`, { valueAsNumber: true })}
+                                />
+                                <span className="input-group-text">Inch</span>
+                                {(errors.extraTrackTopPipeLength as any)?.[index] && (
+                                    <div className="invalid-feedback">
+                                        {(errors.extraTrackTopPipeLength as any)[index]?.message as string}
+                                    </div>
+                                )}
+                            </div>
                         </div>
+                    ))}
+                </div>
+                    
+                    
+                    <div className="col-12 mt-2">
+                        <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                            + Add Track Top
+                        </button>
+                        {extraTrackCount > 1 && (
+                            <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                - Remove Track Top
+                            </button>
+                        )}
                     </div>
+                </>
                 }
             </div>
         </>

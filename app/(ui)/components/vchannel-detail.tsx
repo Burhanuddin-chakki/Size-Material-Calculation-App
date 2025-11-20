@@ -15,18 +15,31 @@ export const vChannelSchema = z.object({
     bigVChannelWeight: z.number().min(1, "V-Channel weight must be greater than 0"),
     vChannelPipeSize180: z.boolean(),
     vChannelPipeSize192: z.boolean(),
-    vChannelExtraLength: z.number().optional(),
+    vChannelExtraLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 });
 
 export default function VChannelDetail(props: VChannelDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("vChannelExtraLength", 0);
+        setValue("vChannelExtraLength", []);
+    }
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("vChannelExtraLength") || [];
+            setValue("vChannelExtraLength", currentValues.slice(0, -1));
+        }
     }
 
     useEffect(() => {
@@ -163,26 +176,44 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra V-Channel Length</label>
-                        <div className="input-group mb-3">
-                            <input 
-                                type="number" 
-                                className={`form-control ${errors.vChannelExtraLength ? 'is-invalid' : ''}`}
-                                placeholder="V-Channel Length" 
-                                aria-label="V-Channel-Length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("vChannelExtraLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.vChannelExtraLength && (
-                                <div className="invalid-feedback">
-                                    {errors.vChannelExtraLength.message as string}
-                                </div>
-                            )}
+                <>
+                <div className="row">
+                    {Array.from({ length: extraTrackCount }).map((_, index) => (
+                        <div className="col-2" key={index}>
+                            <label className="form-label">Extra V-Channel {index + 1}</label>
+                            <div className="input-group mb-3">
+                                <input 
+                                    type="number" 
+                                    className={`form-control ${(errors.vChannelExtraLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                    placeholder="V-Channel Length" 
+                                    aria-label="V-Channel-Length"
+                                    step="1.00"
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    {...register(`vChannelExtraLength.${index}`, { valueAsNumber: true })}
+                                />
+                                <span className="input-group-text">Inch</span>
+                                {(errors.vChannelExtraLength as any)?.[index] && (
+                                    <div className="invalid-feedback">
+                                        {(errors.vChannelExtraLength as any)[index]?.message as string}
+                                    </div>
+                                )}
+                            </div>
                         </div>
+                    ))}
+                </div>
+                    
+                    
+                    <div className="col-12 mb-3">
+                        <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                            + Add Extra V-Channel
+                        </button>
+                        {extraTrackCount > 1 && (
+                            <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                - Remove Extra V-Channel
+                            </button>
+                        )}
                     </div>
+                </>
                 }
             </div>
         </>

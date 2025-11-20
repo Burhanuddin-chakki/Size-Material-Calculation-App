@@ -15,18 +15,31 @@ export const interLockPipeSchema = z.object({
     bigInterLockWeight: z.number().min(1, "InterLock weight must be greater than 0"),
     interLockPipeSize180: z.boolean(),
     interLockPipeSize192: z.boolean(),
-    interLockExtraLength: z.number().optional(),
+    interLockExtraLength: z.array(z.number().min(1, "Extra track length must be greater than 0")).optional(),
 });
 
 export default function InterLockDetail(props: InterLockDetailProps) {
     const { register, formState: { errors }, setValue, watch } = useFormContext();
     const [showExtraTrack, setShowExtraTrack] = useState(false);
+    const [extraTrackCount, setExtraTrackCount] = useState(1);
 
     const ExtraTrackButtonLabel = showExtraTrack ? "Hide Extra Track" : "Show Extra Track";
 
     const showExtraTrackField = () => {
         setShowExtraTrack(!showExtraTrack);
-        setValue("interLockExtraLength", 0);
+        setValue("interLockExtraLength", []);
+    }
+
+    const addExtraTrackField = () => {
+        setExtraTrackCount(prev => prev + 1);
+    }
+
+    const removeExtraTrackField = () => {
+        if (extraTrackCount > 1) {
+            setExtraTrackCount(prev => prev - 1);
+            const currentValues = watch("interLockExtraLength") || [];
+            setValue("interLockExtraLength", currentValues.slice(0, -1));
+        }
     }
 
     useEffect(() => {
@@ -163,26 +176,44 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                     </button>
                 </div>
                 {showExtraTrack &&
-                    <div className="col-2">
-                        <label className="form-label">Extra Track Length</label>
-                        <div className="input-group mb-3">
-                            <input
-                                type="number"
-                                className={`form-control ${errors.interLockExtraLength ? 'is-invalid' : ''}`}
-                                placeholder="Track Length"
-                                aria-label="track-length"
-                                step="1.00"
-                                onWheel={(e) => e.currentTarget.blur()}
-                                {...register("interLockExtraLength", { valueAsNumber: true })}
-                            />
-                            <span className="input-group-text">Inch</span>
-                            {errors.interLockExtraLength && (
-                                <div className="invalid-feedback">
-                                    {errors.interLockExtraLength.message as string}
+                    <>
+                        <div className="row">
+                            {Array.from({ length: extraTrackCount }).map((_, index) => (
+                                <div className="col-2" key={index}>
+                                    <label className="form-label">Extra InterLock {index + 1}</label>
+                                    <div className="input-group mb-3">
+                                        <input
+                                            type="number"
+                                            className={`form-control ${(errors.interLockExtraLength as any)?.[index] ? 'is-invalid' : ''}`}
+                                            placeholder="InterLock Length"
+                                            aria-label="interlock-length"
+                                            step="1.00"
+                                            onWheel={(e) => e.currentTarget.blur()}
+                                            {...register(`interLockExtraLength.${index}`, { valueAsNumber: true })}
+                                        />
+                                        <span className="input-group-text">Inch</span>
+                                        {(errors.interLockExtraLength as any)?.[index] && (
+                                            <div className="invalid-feedback">
+                                                {(errors.interLockExtraLength as any)[index]?.message as string}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+
+
+                        <div className="col-12 mt-2">
+                            <button className="btn btn-success btn-sm me-2" type="button" onClick={addExtraTrackField}>
+                                + Add Extra InterLock
+                            </button>
+                            {extraTrackCount > 1 && (
+                                <button className="btn btn-danger btn-sm" type="button" onClick={removeExtraTrackField}>
+                                    - Remove Extra InterLock
+                                </button>
                             )}
                         </div>
-                    </div>
+                    </>
                 }
             </div>
         </>

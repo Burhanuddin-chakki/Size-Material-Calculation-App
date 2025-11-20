@@ -51,7 +51,7 @@ export interface PipeEstimation {
     fullLargePipeCount?: number;
     fullExtraPipeCount?: number;
     partialExtraPipeInches?: number;
-    extraPipeSize?: number;
+    extraPipeSize?: number[];
     totalWeight?: number;
     totalAmount?: number;
     cuttingEstimation: CuttingEstimation[];
@@ -100,3 +100,12 @@ export interface BestCombinationOption {
 }
 
 export type MaterialEstimationResult = { quantity: number, rate: number, totalPrice: number }
+
+export interface MaterialEstimation {
+    materialName: string;
+    quantity: number;
+    rate: number;
+    type?: string;
+    unit: string;
+    totalPrice: number;
+}
