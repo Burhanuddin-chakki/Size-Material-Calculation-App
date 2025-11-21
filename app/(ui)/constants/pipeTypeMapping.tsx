@@ -1,3 +1,4 @@
+import { TrackType } from "@/app/common/interfaces";
 import dynamic from "next/dynamic";
 
 const TrackDetail = dynamic(
@@ -132,5 +133,82 @@ export const pipeTypeToComponentMapping: Record<
     HandleDetail,
     InterLockDetail,
     LongBearingDetail,
+  ],
+};
+
+export const minWasteLimit = 36;
+export const pipeTypeRateAndWeightMapping: Record<TrackType, string[]> = {
+  track: [
+    "trackPipeType",
+    "trackPipeRate",
+    "smallTrackPipeWeight",
+    "bigTrackPipeWeight",
+    "trackPipeSize180",
+    "trackPipeSize192",
+  ],
+  shutter: [
+    "shutterTrackType",
+    "shutterTrackRate",
+    "smallShutterTrackWeight",
+    " bigShutterTrackWeight",
+    "shutterPipeSize180",
+    "shutterPipeSize192",
+  ],
+  interlock: [
+    "interLockType",
+    "interLockRate",
+    "smallInterLockWeight",
+    "bigInterLockWeight",
+    "interLockPipeSize180",
+    "interLockPipeSize192",
+  ],
+  vchannel: [
+    "vChannelType",
+    "vChannelRate",
+    "smallVChannelWeight",
+    "bigVChannelWeight",
+    "vChannelPipeSize180",
+    "vChannelPipeSize192",
+  ],
+  trackTop: [
+    "trackTopPipeType",
+    "trackTopPipeRate",
+    "smallTrackTopPipeWeight",
+    "bigTrackTopPipeWeight",
+    "trackTopPipeSize180",
+    "trackTopPipeSize192",
+  ],
+  trackBottom: [
+    "trackBottomPipeType",
+    "trackBottomPipeRate",
+    "smallTrackBottomPipeWeight",
+    "bigTrackBottomPipeWeight",
+    "trackBottomPipeSize180",
+    "trackBottomPipeSize192",
+  ],
+  handle: [
+    "handlePipeType",
+    "handlePipeRate",
+    "smallHandlePipeWeight",
+    "bigHandlePipeWeight",
+    "handlePipeSize180",
+    "handlePipeSize192",
+  ],
+  longBearing: [
+    "longBearingPipeType",
+    "longBearingPipeRate",
+    "smallLongBearingPipeWeight",
+    "bigLongBearingPipeWeight",
+    "longBearingPipeSize180",
+    "longBearingPipeSize192",
+  ],
+  spdp: [
+    "spdpPipeType",
+    "spdpPipeRate",
+    "smallSpdpPipeWeight",
+    "bigSpdpPipeWeight",
+    "spdpPipeSize180",
+    "spdpPipeSize192",
+    "spdpType",
   ],
 };

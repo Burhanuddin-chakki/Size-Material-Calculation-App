@@ -2,6 +2,11 @@ import {
   MaterialEstimation,
   MaterialEstimationResult,
 } from "@/app/common/interfaces";
+import {
+  getCuttingEstimation,
+  getPipeWithOptimalCuts,
+  uChannelRequiredCuts,
+} from "./track.service";
 
 export const handleMaterialFunction = (
   field: string,
@@ -25,10 +30,11 @@ export const handleMaterialFunction = (
     kekda: getKekdaQuantity,
     maleFemale: getMaleFemaleQuantity,
     waterGuide: getWaterGuideQuantity,
-    // "macharJali": getMacharJaliQuantity,
-    // "grillJali": getGrillJaliQuantity,
+    macharJali: getMacharJaliQuantity,
+    grillJali: getGrillJaliQuantity,
     screw25_6: getScrew25_6Quantity,
     screw60_6: getScrew60_6Quantity,
+    uChannel: getUChannelQuantity,
   };
   return functionMapping[field]
     ? functionMapping[field](inputData)
@@ -169,36 +175,49 @@ const getWaterGuideQuantity = (inputData: any): MaterialEstimationResult => {
     totalPrice: 2 * inputData.waterGuide,
   };
 };
-const getMacharJaliQuantity = (
-  inputData: any,
-): { quantity: number; rate: number } => {
+const getMacharJaliQuantity = (inputData: any): MaterialEstimationResult => {
   const partitionWidth = inputData.width / inputData.numberOfDoors;
   const panelSizes = [2, 2.5, 3, 3.5, 3.75, 4, 4.5, 5];
-  const selectedPannelSizeWithWidth = selectJaliPannel(
+  const { panelSize, basedOn, sqft } = calculateOptimalSqft(
+    inputData.height,
     partitionWidth,
     panelSizes,
   );
-  const selectedPannelSizeWithHeight = selectJaliPannel(
-    inputData.height,
-    panelSizes,
-  );
-  const selectedPannelSize = Math.min(
-    selectedPannelSizeWithWidth,
-    selectedPannelSizeWithHeight,
-  );
-  const quantity = selectedPannelSize * getRoundFeet(inputData.height);
-  const rate = quantity * inputData.macharJali;
-  return { quantity, rate };
+  const totalPrice = sqft * inputData.macharJali;
+  return {
+    quantity: sqft,
+    rate: inputData.macharJali,
+    totalPrice: totalPrice,
+    type: `${panelSize}ft based on ${basedOn}`,
+  };
 };
-const getGrillJaliQuantity = (
-  inputData: any,
-): { quantity: number; rate: number } => {
+const getGrillJaliQuantity = (inputData: any): MaterialEstimationResult => {
   const partitionWidth = inputData.width / inputData.numberOfDoors;
   const panelSizes = [2, 2.5, 3, 3.5, 4];
-  const selectedPannelSize = selectJaliPannel(partitionWidth, panelSizes);
-  const quantity = selectedPannelSize * getRoundFeet(inputData.height);
-  const rate = quantity * inputData.grillJali;
-  return { quantity, rate };
+  const { panelSize, basedOn, sqft } = calculateOptimalSqft(
+    inputData.height,
+    partitionWidth,
+    panelSizes,
+  );
+  const totalPrice = sqft * inputData.grillJali;
+  return {
+    quantity: sqft,
+    rate: inputData.grillJali,
+    totalPrice: totalPrice,
+    type: `${panelSize}ft based on ${basedOn}`,
+  };
+};
+
+const getUChannelQuantity = (inputData: any): MaterialEstimationResult => {
+  const requiredCuts = uChannelRequiredCuts(inputData);
+  const pipeSizes = [extractNumberFromString(inputData.uChannel_type) * 12];
+  const { results } = getPipeWithOptimalCuts(requiredCuts, pipeSizes, []);
+  const cuttingEstimation = getCuttingEstimation(results, Infinity);
+  return {
+    quantity: cuttingEstimation.length,
+    rate: inputData.uChannel_rate,
+    totalPrice: cuttingEstimation.length * inputData.uChannel_rate,
+  };
 };
 const selectJaliPannel = (size: number, panelSizes: number[]): number => {
   let selectedSize: number = 0;
@@ -219,13 +238,13 @@ const selectJaliPannel = (size: number, panelSizes: number[]): number => {
  * Returns the configuration that results in minimum square footage (most profitable)
  * @param heightInches - Height in inches
  * @param widthInches - Width in inches
- * @param panelSizes - Available panel sizes in feet (default: [2, 2.5, 3, 3.5, 3.75, 4, 4.5, 5])
+ * @param panelSizes - Available panel sizes in feet
  * @returns Object with selected panel size, dimension used, and total square footage
  */
 export const calculateOptimalSqft = (
   heightInches: number,
   widthInches: number,
-  panelSizes: number[] = [2, 2.5, 3, 3.5, 3.75, 4, 4.5, 5],
+  panelSizes: number[],
 ): { panelSize: number; basedOn: "height" | "width"; sqft: number } => {
   const heightFeet = heightInches / 12;
   const widthFeet = widthInches / 12;
@@ -239,17 +258,17 @@ export const calculateOptimalSqft = (
   const sqftByWidth = panelByWidth * heightFeet;
 
   // Return the option with minimum square footage (most profitable)
-  if (sqftByHeight <= sqftByWidth) {
+  if (sqftByHeight && sqftByHeight <= sqftByWidth) {
     return {
       panelSize: panelByHeight,
       basedOn: "height",
-      sqft: Math.round(sqftByHeight * 100) / 100, // Round to 2 decimal places
+      sqft: roundToTwoDecimals(sqftByHeight),
     };
   } else {
     return {
       panelSize: panelByWidth,
       basedOn: "width",
-      sqft: Math.round(sqftByWidth * 100) / 100, // Round to 2 decimal places
+      sqft: roundToTwoDecimals(sqftByWidth),
     };
   }
 };
@@ -257,11 +276,17 @@ export const calculateOptimalSqft = (
 export const calculateMaterialTotalAmount = (
   materialEstimationDetail: MaterialEstimation[],
 ): number => {
-  return (
-    Math.round(
-      materialEstimationDetail.reduce((total, item) => {
-        return total + item.totalPrice;
-      }, 0) * 100,
-    ) / 100
+  return roundToTwoDecimals(
+    materialEstimationDetail.reduce((total, item) => {
+      return total + item.totalPrice;
+    }, 0),
   );
+};
+
+export const roundToTwoDecimals = (number: number) =>
+  Math.round(number * 100) / 100;
+
+export const extractNumberFromString = (str: string): number => {
+  const match = str.match(/\d+(\.\d+)?/);
+  return match ? parseFloat(match[0]) : 0;
 };

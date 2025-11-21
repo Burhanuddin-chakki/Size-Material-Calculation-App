@@ -7,84 +7,11 @@ import {
   PipeEstimation,
   TrackType,
 } from "@/app/common/interfaces";
-import { getNoOfPannels } from "./material.service";
-
-const minWasteLimit = 36;
-const pipeTypeRateAndWeightMapping: Record<TrackType, string[]> = {
-  track: [
-    "trackPipeType",
-    "trackPipeRate",
-    "smallTrackPipeWeight",
-    "bigTrackPipeWeight",
-    "trackPipeSize180",
-    "trackPipeSize192",
-  ],
-  shutter: [
-    "shutterTrackType",
-    "shutterTrackRate",
-    "smallShutterTrackWeight",
-    " bigShutterTrackWeight",
-    "shutterPipeSize180",
-    "shutterPipeSize192",
-  ],
-  interlock: [
-    "interLockType",
-    "interLockRate",
-    "smallInterLockWeight",
-    "bigInterLockWeight",
-    "interLockPipeSize180",
-    "interLockPipeSize192",
-  ],
-  vchannel: [
-    "vChannelType",
-    "vChannelRate",
-    "smallVChannelWeight",
-    "bigVChannelWeight",
-    "vChannelPipeSize180",
-    "vChannelPipeSize192",
-  ],
-  trackTop: [
-    "trackTopPipeType",
-    "trackTopPipeRate",
-    "smallTrackTopPipeWeight",
-    "bigTrackTopPipeWeight",
-    "trackTopPipeSize180",
-    "trackTopPipeSize192",
-  ],
-  trackBottom: [
-    "trackBottomPipeType",
-    "trackBottomPipeRate",
-    "smallTrackBottomPipeWeight",
-    "bigTrackBottomPipeWeight",
-    "trackBottomPipeSize180",
-    "trackBottomPipeSize192",
-  ],
-  handle: [
-    "handlePipeType",
-    "handlePipeRate",
-    "smallHandlePipeWeight",
-    "bigHandlePipeWeight",
-    "handlePipeSize180",
-    "handlePipeSize192",
-  ],
-  longBearing: [
-    "longBearingPipeType",
-    "longBearingPipeRate",
-    "smallLongBearingPipeWeight",
-    "bigLongBearingPipeWeight",
-    "longBearingPipeSize180",
-    "longBearingPipeSize192",
-  ],
-  spdp: [
-    "spdpPipeType",
-    "spdpPipeRate",
-    "smallSpdpPipeWeight",
-    "bigSpdpPipeWeight",
-    "spdpPipeSize180",
-    "spdpPipeSize192",
-    "spdpType",
-  ],
-};
+import { getNoOfPannels, roundToTwoDecimals } from "./material.service";
+import {
+  minWasteLimit,
+  pipeTypeRateAndWeightMapping,
+} from "../constants/pipeTypeMapping";
 
 const getPipeSizes = (inputData: any, trackType: TrackType): number[] => {
   const pipeSizes: number[] = [];
@@ -271,6 +198,10 @@ const getInterLockRequiredCuts = (inputData: any) => {
 const getVChannelRequiredCuts = (inputData: any) => {
   return [inputData.width];
 };
+export const uChannelRequiredCuts = (inputData: any) => {
+  const partitionWidth = inputData.width / inputData.numberOfDoors;
+  return [inputData.height, partitionWidth, inputData.height, partitionWidth];
+};
 
 function optimizePipesUtilisation(
   requiredCuts: number[],
@@ -280,6 +211,53 @@ function optimizePipesUtilisation(
   trackType: TrackType,
   minWaste = minWasteLimit,
 ): PipeEstimation {
+  const { results, usedExtraSizes } = getPipeWithOptimalCuts(
+    requiredCuts,
+    pipeSizes,
+    extraPipeSize,
+  );
+  const cuttingEstimation = getCuttingEstimation(results, minWaste);
+  const {
+    fullSmallPipeCount,
+    fullLargePipeCount,
+    partialSmallPipeInches,
+    partialLargePipeInches,
+    fullExtraPipeCount,
+    partialExtraPipeInches,
+  } = getPipeCountAndInches(cuttingEstimation);
+
+  const totalInches = calculateTotalInches(cuttingEstimation);
+  const totalWeight = getTotalWeight(cuttingEstimation, trackType, inputData);
+  const totalAmount =
+    totalWeight * inputData[pipeTypeRateAndWeightMapping[trackType][1]];
+  const finalEstimation: PipeEstimation = {
+    pipeType:
+      trackType !== "spdp"
+        ? inputData[pipeTypeRateAndWeightMapping[trackType][0]]
+        : `${inputData[pipeTypeRateAndWeightMapping[trackType][6]]} / ${inputData[pipeTypeRateAndWeightMapping[trackType][0]]}`,
+    pipeRate: inputData[pipeTypeRateAndWeightMapping[trackType][1]],
+    unit: "Inches",
+    totalInches: totalInches,
+    partialSmallPipeInches: partialSmallPipeInches,
+    partialLargePipeInches: partialLargePipeInches,
+    fullSmallPipeCount: fullSmallPipeCount,
+    fullLargePipeCount: fullLargePipeCount,
+    fullExtraPipeCount: fullExtraPipeCount,
+    partialExtraPipeInches: partialExtraPipeInches,
+    extraPipeSize: usedExtraSizes,
+    totalWeight: totalWeight, //Later inches x weight per inch
+    totalAmount: roundToTwoDecimals(totalAmount),
+    cuttingEstimation: cuttingEstimation,
+  };
+
+  return finalEstimation;
+}
+
+export const getPipeWithOptimalCuts = (
+  requiredCuts: number[],
+  pipeSizes: number[],
+  extraPipeSize: number[],
+) => {
   const results: OptimizationResult[] = [];
   const remainingCuts = [...requiredCuts]; // Create a copy
   let remainingPipeSizes = [...extraPipeSize];
@@ -334,42 +312,8 @@ function optimizePipesUtilisation(
       }
     }
   }
-  const cuttingEstimation = getCuttingEstimation(results, minWaste);
-  const {
-    fullSmallPipeCount,
-    fullLargePipeCount,
-    partialSmallPipeInches,
-    partialLargePipeInches,
-    fullExtraPipeCount,
-    partialExtraPipeInches,
-  } = getPipeCountAndInches(cuttingEstimation);
-
-  const totalInches = calculateTotalInches(cuttingEstimation);
-  const totalWeight = getTotalWeight(cuttingEstimation, trackType, inputData);
-  const totalAmount =
-    totalWeight * inputData[pipeTypeRateAndWeightMapping[trackType][1]];
-  const finalEstimation: PipeEstimation = {
-    pipeType:
-      trackType !== "spdp"
-        ? inputData[pipeTypeRateAndWeightMapping[trackType][0]]
-        : `${inputData[pipeTypeRateAndWeightMapping[trackType][6]]} / ${inputData[pipeTypeRateAndWeightMapping[trackType][0]]}`,
-    pipeRate: inputData[pipeTypeRateAndWeightMapping[trackType][1]],
-    unit: "Inches",
-    totalInches: totalInches,
-    partialSmallPipeInches: partialSmallPipeInches,
-    partialLargePipeInches: partialLargePipeInches,
-    fullSmallPipeCount: fullSmallPipeCount,
-    fullLargePipeCount: fullLargePipeCount,
-    fullExtraPipeCount: fullExtraPipeCount,
-    partialExtraPipeInches: partialExtraPipeInches,
-    extraPipeSize: usedExtraSizes,
-    totalWeight: totalWeight, //Later inches x weight per inch
-    totalAmount: Math.round(totalAmount * 100) / 100, // Later total weight x rate
-    cuttingEstimation: cuttingEstimation,
-  };
-
-  return finalEstimation;
-}
+  return { results, usedExtraSizes };
+};
 
 function getAllSumCombinations(numbers: number[]): CombinationResult[] {
   const results = [];
@@ -432,7 +376,7 @@ function findBestCombinations(
   return results;
 }
 
-const getCuttingEstimation = (
+export const getCuttingEstimation = (
   result: OptimizationResult[],
   minWaste: number,
 ): CuttingEstimation[] => {
@@ -521,17 +465,15 @@ const getTotalWeight = (
       totalWeight += cutsWeight;
     }
   });
-  return Math.round(totalWeight * 100) / 100;
+  return roundToTwoDecimals(totalWeight);
 };
 
 export const calculateTrackTotalAmount = (
   trackEstimationDetail: EstimationData,
 ): number => {
-  return (
-    Math.round(
-      Object.entries(trackEstimationDetail).reduce((total, [, estimation]) => {
-        return total + estimation.totalAmount;
-      }, 0) * 100,
-    ) / 100
+  return roundToTwoDecimals(
+    Object.entries(trackEstimationDetail).reduce((total, [, estimation]) => {
+      return total + estimation.totalAmount;
+    }, 0),
   );
 };

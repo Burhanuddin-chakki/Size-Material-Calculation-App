@@ -19,6 +19,7 @@ import {
 import {
   calculateMaterialTotalAmount,
   handleMaterialFunction,
+  roundToTwoDecimals,
 } from "../services/material.service";
 import CuttingEstimation from "../utility/cutting-estimation";
 import FinalPipeBill from "../utility/final-pipe-bill";
@@ -48,15 +49,19 @@ export default function MaterialPrice({
       ) {
         isMaterialEstimationNeeded = true;
       }
-      // if(material.field === "macharJali" && inputData.isContainMacharJali) {
-      //     isMaterialEstimationNeeded = true
-      // }
-      // if(material.field === "grillJali" && inputData.isContainGrillJali) {
-      //     isMaterialEstimationNeeded = true
-      // }
-      // if (material.field === "uChannel" && inputData.isContainMacharJali && !inputData.isContainGrillJali) {
-      //     isMaterialEstimationNeeded = true
-      // }
+      if (material.field === "macharJali" && inputData.isContainMacharJali) {
+        isMaterialEstimationNeeded = true;
+      }
+      if (material.field === "grillJali" && inputData.isContainGrillJali) {
+        isMaterialEstimationNeeded = true;
+      }
+      if (
+        material.field === "uChannel" &&
+        inputData.isContainMacharJali &&
+        !inputData.isContainGrillJali
+      ) {
+        isMaterialEstimationNeeded = true;
+      }
       if (
         material.field === "screw25_6" &&
         (inputData.selectedSpOrDpPipe === "DP" ||
@@ -65,7 +70,7 @@ export default function MaterialPrice({
         isMaterialEstimationNeeded = true;
       }
       if (isMaterialEstimationNeeded) {
-        const { quantity, rate, totalPrice } = handleMaterialFunction(
+        const { quantity, rate, totalPrice, type } = handleMaterialFunction(
           material.field,
           inputData,
         );
@@ -73,9 +78,9 @@ export default function MaterialPrice({
           materialName: material.label,
           quantity: quantity,
           rate: rate,
-          type: inputData[`${material.field}_type`] || "",
+          type: inputData[`${material.field}_type`] || type || "",
           unit: material.unit,
-          totalPrice: Math.round(totalPrice * 100) / 100,
+          totalPrice: roundToTwoDecimals(totalPrice),
         });
       }
     });

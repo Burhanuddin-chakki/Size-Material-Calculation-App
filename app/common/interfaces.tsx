@@ -110,6 +110,7 @@ export type MaterialEstimationResult = {
   quantity: number;
   rate: number;
   totalPrice: number;
+  type?: string;
 };
 
 export interface MaterialEstimation {
