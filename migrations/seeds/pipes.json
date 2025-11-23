@@ -1,0 +1,434 @@
+[
+  {
+    "id": 1,
+    "pipeName": "2 Track Top",
+    "pipeType": "Track Top",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 3],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1.9
+      },
+      {
+        "size": 192,
+        "weight": 2.2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "pipeName": "2 Track Bottom",
+    "pipeType": "Track Bottom",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 3],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.3
+      },
+      {
+        "size": 192,
+        "weight": 2.6
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "pipeName": "Handle 3/4",
+    "pipeType": "Handle",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1.4
+      },
+      {
+        "size": 192,
+        "weight": 1.5
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "pipeName": "InterLock 3/4",
+    "pipeType": "InterLock",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1.75
+      },
+      {
+        "size": 192,
+        "weight": 1.85
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "pipeName": "Long Bearing 3/4",
+    "pipeType": "Long Bearing",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1.9
+      },
+      {
+        "size": 192,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "pipeName": "3 Track Top",
+    "pipeType": "Track Top",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [2, 4],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "pipeName": "3 Track Bottom",
+    "pipeType": "Track Bottom",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [2, 4],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "pipeName": "Handle 18/60",
+    "pipeType": "Handle",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [3, 4],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.6
+      },
+      {
+        "size": 192,
+        "weight": 2.75
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "pipeName": "InterLock 18/60",
+    "pipeType": "InterLock",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [3, 4],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.7
+      },
+      {
+        "size": 192,
+        "weight": 2.85
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "pipeName": "Long Bearing 18/60",
+    "pipeType": "Long Bearing",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [3, 4],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.8
+      },
+      {
+        "size": 192,
+        "weight": 2.9
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "pipeName": "2 Track Domal",
+    "pipeType": "Track",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [5],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "pipeName": "Shutter Domal",
+    "pipeType": "Shutter",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [5, 6, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "pipeName": "InterLock Domal",
+    "pipeType": "InterLock",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [5, 6, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "pipeName": "3 Track Domal",
+    "pipeType": "Track",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [6],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "pipeName": "2 Track Mini-Domal",
+    "pipeType": "Track",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [7],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "pipeName": "Shutter Mini-Domal",
+    "pipeType": "Shutter",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [7, 8],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "pipeName": "InterLock Mini-Domal",
+    "pipeType": "InterLock",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [7, 8],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "pipeName": "3 Track Mini-Domal",
+    "pipeType": "Track",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [8],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "pipeName": "Track Deep-Domal",
+    "pipeType": "Track",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "pipeName": "V-Channel Deep-Domal",
+    "pipeType": "V-Channel",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 1
+      },
+      {
+        "size": 192,
+        "weight": 1
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "pipeName": "SP Pipe 2.5/1.5",
+    "pipeType": "SP",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.5
+      },
+      {
+        "size": 192,
+        "weight": 2.7
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "pipeName": "SP Pipe 4/1",
+    "pipeType": "SP",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 4.3
+      },
+      {
+        "size": 192,
+        "weight": 4.5
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "pipeName": "DP Pipe 2.5/1.5",
+    "pipeType": "DP",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 2.6
+      },
+      {
+        "size": 192,
+        "weight": 2.75
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "pipeName": "DP Pipe 4/1",
+    "pipeType": "DP",
+    "pipeSizeUnit": "inch",
+    "pipeWeightUnit": "kg",
+    "windowType": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pipeSizes": [
+      {
+        "size": 180,
+        "weight": 4.4
+      },
+      {
+        "size": 192,
+        "weight": 4.6
+      }
+    ]
+  }
+]

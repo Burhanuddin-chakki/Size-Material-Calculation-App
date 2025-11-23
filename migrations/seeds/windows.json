@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "windowType": "2 Track Normal",
+    "imageURL": "/2-track-window.png",
+    "windowTrack": 2
+  },
+  {
+    "id": 2,
+    "windowType": "3 Track Normal",
+    "imageURL": "/3-track-window.png",
+    "windowTrack": 3
+  },
+  {
+    "id": 3,
+    "windowType": "2 Track 18/60",
+    "imageURL": "/2-track-window.png",
+    "windowTrack": 2
+  },
+  {
+    "id": 4,
+    "windowType": "3 Track 18/60",
+    "imageURL": "/3-track-window.png",
+    "windowTrack": 3
+  },
+  {
+    "id": 5,
+    "windowType": "2 Track Domal",
+    "imageURL": "/2-track-window.png",
+    "windowTrack": 2
+  },
+  {
+    "id": 6,
+    "windowType": "3 Track Domal",
+    "imageURL": "/3-track-window.png",
+    "windowTrack": 3
+  },
+  {
+    "id": 7,
+    "windowType": "2 Track Mini Domal",
+    "imageURL": "/2-track-window.png",
+    "windowTrack": 2
+  },
+  {
+    "id": 8,
+    "windowType": "3 Track Mini Domal",
+    "imageURL": "/3-track-window.png",
+    "windowTrack": 3
+  },
+  {
+    "id": 9,
+    "windowType": "2 track Deep Domal",
+    "imageURL": "/2-track-window.png",
+    "windowTrack": 2
+  },
+  {
+    "id": 10,
+    "windowType": "3 Track Deep Domal",
+    "imageURL": "/3-track-window.png",
+    "windowTrack": 3
+  }
+]

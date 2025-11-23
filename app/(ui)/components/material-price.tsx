@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { MaterialType } from "../../common/interfaces";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface MaterialPriceProps {
   materialWithType: MaterialType[];
@@ -18,14 +18,20 @@ export default function MaterialPrice({
     watch,
   } = useFormContext();
 
+  const isInitialized = useRef(false);
+
   useEffect(() => {
-    materialWithType.forEach((item: MaterialType) => {
-      setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
-      setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);
-    });
-    materialWithoutType.forEach((item: MaterialType) => {
-      setValue(item.field, item.rate);
-    });
+    if (!isInitialized.current) {
+      console.log("MaterialWithType:", materialWithType);
+      materialWithType.forEach((item: MaterialType) => {
+        setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
+        setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);
+      });
+      materialWithoutType.forEach((item: MaterialType) => {
+        setValue(item.field, item.rate);
+      });
+      isInitialized.current = true;
+    }
   }, [materialWithType, materialWithoutType, setValue]);
 
   return (
@@ -49,8 +55,8 @@ export default function MaterialPrice({
                     {watch(`${item.field}_type`)}
                   </button>
                   <ul className="dropdown-menu dropdown-menu-dark">
-                    {item.type?.map((type) => (
-                      <li key={type.field}>
+                    {item.type?.map((type, index) => (
+                      <li key={`${item.field}-${index}`}>
                         <a
                           className="dropdown-item"
                           href="#"

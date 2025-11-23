@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "color": "Brown",
+    "ratePerKg": 360
+  },
+  {
+    "id": 2,
+    "color": "Black",
+    "ratePerKg": 375
+  },
+  {
+    "id": 3,
+    "color": "White",
+    "ratePerKg": 375
+  },
+  {
+    "id": 4,
+    "color": "Champion",
+    "ratePerKg": 405
+  },
+  {
+    "id": 5,
+    "color": "Metalic Grey",
+    "ratePerKg": 455
+  },
+  {
+    "id": 6,
+    "color": "AZ Grey",
+    "ratePerKg": 455
+  },
+  {
+    "id": 7,
+    "color": "Wooden",
+    "ratePerKg": 550
+  }
+]

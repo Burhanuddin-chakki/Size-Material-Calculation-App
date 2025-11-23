@@ -1,0 +1,235 @@
+[
+  {
+    "id": 1,
+    "label": "Angle",
+    "field": "angleRate",
+    "unit": "kg",
+    "rate": 340,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 2,
+    "label": "L Connector",
+    "field": "lConnector",
+    "unit": "piece",
+    "rate": 12,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 3,
+    "label": "L Patti",
+    "field": "lPatti",
+    "unit": "piece",
+    "rate": 8,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 4,
+    "label": "Bearing",
+    "field": "bearing",
+    "unit": "piece",
+    "rate": 0,
+    "type": [
+      {
+        "name": "Ohm",
+        "field": "ohm",
+        "rate": 7.5
+      },
+      {
+        "name": "Skill Black",
+        "field": "skillBlack",
+        "rate": 10
+      },
+      {
+        "name": "Skyring",
+        "field": "skyring",
+        "rate": 16
+      }
+    ],
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 5,
+    "label": "Screw 13/6",
+    "field": "screw13_6",
+    "unit": "dozen",
+    "rate": 9,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 6,
+    "label": "Lock",
+    "field": "lock",
+    "unit": "piece",
+    "rate": 0,
+    "type": [
+      {
+        "name": "Eagle Boss",
+        "field": "eagleBossLock",
+        "rate": 17.5
+      },
+      {
+        "name": "Elbows",
+        "field": "elbowsLock",
+        "rate": 20
+      }
+    ],
+    "windowTypeId": [1, 2, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 7,
+    "label": "Lock",
+    "field": "lock",
+    "unit": "piece",
+    "rate": 0,
+    "type": [
+      {
+        "name": "Eagle Boss",
+        "field": "eagleBossLock",
+        "rate": 50
+      }
+    ],
+    "windowTypeId": [3, 4]
+  },
+  {
+    "id": 8,
+    "label": "PVC Brush",
+    "field": "pvcBrush",
+    "unit": "window",
+    "rate": 60,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 9,
+    "label": "Glass Rubber",
+    "field": "glassRubber",
+    "unit": "kg",
+    "rate": 115,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 10,
+    "label": "Glass",
+    "field": "glass",
+    "unit": "sqft",
+    "rate": 48,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 11,
+    "label": "Kekda",
+    "field": "kekda",
+    "unit": "piece",
+    "rate": 11,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 12,
+    "label": "Male Female",
+    "field": "maleFemale",
+    "unit": "piece",
+    "rate": 3,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 13,
+    "label": "Water Guide",
+    "field": "waterGuide",
+    "rate": 4,
+    "windowTypeId": [5, 6, 7, 8, 9, 10],
+    "unit": "piece"
+  },
+  {
+    "id": 14,
+    "label": "Silicon",
+    "field": "silicon",
+    "unit": "bottle",
+    "rate": 150,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 15,
+    "label": "Screw 75/10",
+    "field": "screw75_10",
+    "unit": "piece",
+    "rate": 4,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 16,
+    "label": "Machar Jali",
+    "field": "macharJali",
+    "unit": "sqft",
+    "rate": 15,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 17,
+    "label": "Labour",
+    "field": "labour",
+    "unit": "sqft",
+    "rate": 30,
+    "windowTypeId": [1, 2]
+  },
+  {
+    "id": 18,
+    "label": "Labour",
+    "field": "labour",
+    "unit": "sqft",
+    "rate": 40,
+    "windowTypeId": [3, 4]
+  },
+  {
+    "id": 19,
+    "label": "Labour",
+    "field": "labour",
+    "unit": "sqft",
+    "rate": 55,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 20,
+    "label": "U-Channel",
+    "field": "uChannel",
+    "unit": "piece",
+    "rate": 0,
+    "type": [
+      {
+        "name": "Plastic 9 Feet",
+        "field": "plastic9Feet",
+        "rate": 20
+      },
+      {
+        "name": "Aluminium 12 Feet",
+        "field": "aluminium12Feet",
+        "rate": 75
+      }
+    ],
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 21,
+    "label": "Grill Jali",
+    "field": "grillJali",
+    "unit": "sqft",
+    "rate": 35,
+    "type": [],
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  {
+    "id": 22,
+    "label": "Screw 60/6",
+    "field": "screw60_6",
+    "unit": "piece",
+    "rate": 1,
+    "windowTypeId": [1, 2, 3, 4]
+  },
+  {
+    "id": 23,
+    "label": "Screw 25/6",
+    "field": "screw25_6",
+    "unit": "piece",
+    "rate": 1,
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  }
+]

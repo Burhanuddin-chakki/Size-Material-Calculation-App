@@ -122,6 +122,11 @@ export default function MaterialPrice({
     );
   }, [trackEstimationDetail]);
 
+  const totalTrackAmount = calculateTrackTotalAmount(trackEstimationDetail);
+  const totalMaterialAmount = calculateMaterialTotalAmount(
+    materialEstimationDetail,
+  );
+
   return (
     <>
       <div className="row main-container">
@@ -152,7 +157,14 @@ export default function MaterialPrice({
             <strong>
               Total Amount:{" "}
               {trackEstimationDetail && materialEstimationDetail
-                ? `${calculateTrackTotalAmount(trackEstimationDetail)} + ${calculateMaterialTotalAmount(materialEstimationDetail)} = ${trackEstimationDetail && materialEstimationDetail ? calculateTrackTotalAmount(trackEstimationDetail) + calculateMaterialTotalAmount(materialEstimationDetail) : 0}`
+                ? `${totalTrackAmount} + ${totalMaterialAmount} = 
+                    ${
+                      trackEstimationDetail && materialEstimationDetail
+                        ? roundToTwoDecimals(
+                            totalTrackAmount + totalMaterialAmount,
+                          )
+                        : 0
+                    }`
                 : ""}
             </strong>
           </h4>
