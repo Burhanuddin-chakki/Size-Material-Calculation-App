@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { MaterialType } from "../../common/interfaces";
+import { MaterialType } from "@/types";
 import { useEffect, useRef } from "react";
 
 interface MaterialPriceProps {

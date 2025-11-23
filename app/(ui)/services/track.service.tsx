@@ -6,7 +6,7 @@ import {
   OptimizationResult,
   PipeEstimation,
   TrackType,
-} from "@/app/common/interfaces";
+} from "@/types";
 import { getNoOfPannels, roundToTwoDecimals } from "./material.service";
 import {
   minWasteLimit,

@@ -4,7 +4,7 @@ import { windowInputSchema } from "../components/window-detail";
 import { trackPipeSchema } from "../components/track-detail";
 import { shutterPipeSchema } from "../components/shutter-detail";
 import { interLockPipeSchema } from "../components/interlock-detail";
-import { MaterialType, PipeType } from "../../common/interfaces";
+import { MaterialType, PipeType } from "@/types";
 import { trackBottomPipeSchema } from "../components/track-bottom-detail";
 import { trackTopPipeSchema } from "../components/track-top-detail";
 import { handlePipeSchema } from "../components/handle-detail";

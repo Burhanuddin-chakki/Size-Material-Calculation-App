@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { PipeDetailType, PipeType } from "../../common/interfaces";
+import { PipeDetailType, PipeType } from "@/types";
 import z from "zod";
 
 interface VChannelDetailProps {

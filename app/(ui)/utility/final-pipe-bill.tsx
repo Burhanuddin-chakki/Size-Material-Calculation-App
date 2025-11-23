@@ -1,4 +1,4 @@
-import { EstimationData, PipeEstimation } from "@/app/common/interfaces";
+import { EstimationData, PipeEstimation } from "@/types";
 import { calculateTrackTotalAmount } from "../services/track.service";
 
 export default function FinalPipeBill({

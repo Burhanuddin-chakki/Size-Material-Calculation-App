@@ -1,9 +1,5 @@
 import { useMemo } from "react";
-import {
-  EstimationData,
-  MaterialEstimation,
-  MaterialType,
-} from "@/app/common/interfaces";
+import { EstimationData, MaterialEstimation, MaterialType } from "@/types";
 import {
   calculateTrackTotalAmount,
   getHandleTrackCuttingEstimation,

@@ -1,4 +1,4 @@
-import { TrackType } from "@/app/common/interfaces";
+import { TrackType } from "@/types";
 import dynamic from "next/dynamic";
 
 const TrackDetail = dynamic(

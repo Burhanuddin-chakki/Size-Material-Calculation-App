@@ -2,11 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  MaterialType,
-  PipeDetailType,
-  PipeType,
-} from "@/app/common/interfaces";
+import { MaterialType, PipeDetailType, PipeType } from "@/types";
 import {
   fetchMaterialList,
   fetchPipeDetail,

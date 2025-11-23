@@ -1,4 +1,4 @@
-import { MaterialEstimation } from "@/app/common/interfaces";
+import { MaterialEstimation } from "@/types";
 import { calculateMaterialTotalAmount } from "../services/material.service";
 
 export default function FinalMaterialBill({

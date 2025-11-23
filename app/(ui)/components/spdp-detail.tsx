@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { PipeDetailType, PipeType } from "../../common/interfaces";
+import { PipeDetailType, PipeType } from "@/types";
 
 interface spdpDetailProps {
   pipeType: PipeType[];

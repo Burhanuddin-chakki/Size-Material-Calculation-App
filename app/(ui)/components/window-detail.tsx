@@ -44,7 +44,6 @@ export default function WindowDetail({
         <h3>Window Details</h3>
       </div>
       <div className="col-12 col-md-6 col-lg-3 mb-3">
-        {/* <label className="form-label">Window Size</label> */}
         <div className="row g-2">
           <div className="col-6">
             <label className="form-label">Height</label>

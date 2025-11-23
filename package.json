@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "db:seed": "tsx migrations/scripts/seed-database.ts"
+    "db:seed": "tsx scripts/seed-database.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

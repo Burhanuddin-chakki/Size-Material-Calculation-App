@@ -1,14 +1,9 @@
 "use server";
 
-import connectDb from "@/database/connection";
+import connectDb from "@/lib/db";
 import MaterialModel from "@/models/material.model";
 import WindowModel from "@/models/window.model";
-import {
-  MaterialType,
-  PipeDetailType,
-  PipeType,
-  WindowType,
-} from "../common/interfaces";
+import { MaterialType, PipeDetailType, PipeType, WindowType } from "@/types";
 import PipeTypeModel from "@/models/pipe-type.model";
 import PipeModel from "@/models/pipe.model";
 

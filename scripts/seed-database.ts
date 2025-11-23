@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import WindowModel from "../../models/window.model";
-import MaterialModel from "../../models/material.model";
-import PipeTypeModel from "../../models/pipe-type.model";
+import WindowModel from "../models/window.model";
+import MaterialModel from "../models/material.model";
+import PipeTypeModel from "../models/pipe-type.model";
 import windowData from "../seeds/windows.json";
 import pipeTypeData from "../seeds/pipetypes.json";
 import materialData from "../seeds/materials.json";
 import pipeData from "../seeds/pipes.json";
-import PipeModel from "@/models/pipe.model";
+import PipeModel from "../models/pipe.model";
 
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/window-estimation-db";

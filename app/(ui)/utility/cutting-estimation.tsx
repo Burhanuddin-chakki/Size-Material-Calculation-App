@@ -1,4 +1,4 @@
-import { EstimationData, PipeEstimation } from "@/app/common/interfaces";
+import { EstimationData, PipeEstimation } from "@/types";
 
 export default function CuttingEstimation({
   trackEstimationDetail,

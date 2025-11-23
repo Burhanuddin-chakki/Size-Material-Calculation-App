@@ -1,7 +1,4 @@
-import {
-  MaterialEstimation,
-  MaterialEstimationResult,
-} from "@/app/common/interfaces";
+import { MaterialEstimation, MaterialEstimationResult } from "@/types";
 import {
   getCuttingEstimation,
   getPipeWithOptimalCuts,

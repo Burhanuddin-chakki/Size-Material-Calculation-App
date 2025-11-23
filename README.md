@@ -92,20 +92,37 @@ For detailed installation instructions, troubleshooting, and configuration optio
 
 ```
 ├── app/                          # Next.js App Router
-│   ├── (ui)/                     # UI routes
+│   ├── _components/              # Shared app components
+│   │   ├── navbar.tsx            # Navigation bar (optional)
+│   │   └── side-nav.tsx          # Sidebar navigation
+│   ├── (ui)/                     # UI route group
 │   │   ├── [id]/                 # Dynamic route for window estimation
-│   │   ├── components/           # Reusable components
-│   │   └── services/             # Business logic and calculations
-│   ├── api/                      # API utilities
-│   ├── common/                   # Shared interfaces and types
-│   └── layout.tsx                # Root layout
-├── database/                     # Database connection
+│   │   ├── components/           # Route-specific components
+│   │   ├── constants/            # Constants and configurations
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── services/             # Business logic and calculations
+│   │   ├── utility/              # Utility functions
+│   │   └── page.tsx              # Main UI page
+│   ├── api/                      # API routes and utilities
+│   ├── layout.tsx                # Root layout
+│   ├── globals.css               # Global styles
+│   └── favicon.ico               # App icon
+├── lib/                          # Shared utilities and helpers
+│   └── db.ts                     # Database connection
+├── types/                        # TypeScript type definitions
+│   └── index.ts                  # All interfaces and types
 ├── models/                       # MongoDB schemas
 │   ├── material.model.ts         # Material schema
 │   ├── pipe-type.model.ts        # Pipe type schema
+│   ├── pipe.model.ts             # Pipe detail schema
 │   └── window.model.ts           # Window type schema
-├── scripts/                      # Utility scripts
+├── scripts/                      # Build and migration scripts
 │   └── seed-database.ts          # Database seeding script
+├── seeds/                        # Seed data (JSON files)
+│   ├── materials.json            # Material seed data
+│   ├── pipes.json                # Pipe seed data
+│   ├── pipetypes.json            # Pipe type seed data
+│   └── windows.json              # Window seed data
 └── public/                       # Static assets
 ```
 
