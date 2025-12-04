@@ -11,6 +11,7 @@ import {
   SpdpDetail,
 } from "../constants/pipeTypeMapping";
 import BackButton from "../utility/BackButton";
+import UChannelDetail from "../components/uchannel-detail";
 
 const MaterialPrice = dynamic(
   () => import("@/app/(ui)/components/material-price"),
@@ -68,6 +69,8 @@ export default function WindowTypePage() {
     materialWithoutType,
     materialEstimationData,
     selectedSpOrDpPipe,
+    showUChannelPipeDetails,
+    setIncludeUChannelDetail,
     methods,
     onSubmit,
     openMaterialAdditionalSections,
@@ -83,12 +86,23 @@ export default function WindowTypePage() {
     if (!isLoading && windowType && windowType in pipeTypeToComponentMapping) {
       let components = [...pipeTypeToComponentMapping[windowType]];
 
+      //Add SpdpDetail component conditionally
       if (selectedSpOrDpPipe === "SP" || selectedSpOrDpPipe === "DP") {
         if (!components.includes(SpdpDetail)) components.push(SpdpDetail);
         setIncludeSpDpSchema(true);
       } else {
         components = components.filter((c) => c !== SpdpDetail);
         setIncludeSpDpSchema(false);
+      }
+
+      //Add UChannelDetail component conditionally
+      if (showUChannelPipeDetails) {
+        if (!components.includes(UChannelDetail))
+          components.push(UChannelDetail);
+        setIncludeUChannelDetail(true);
+      } else {
+        components = components.filter((c) => c !== UChannelDetail);
+        setIncludeUChannelDetail(false);
       }
 
       return components.map((Component, index) => (
@@ -109,6 +123,8 @@ export default function WindowTypePage() {
     pipeDetail,
     selectedSpOrDpPipe,
     setIncludeSpDpSchema,
+    showUChannelPipeDetails,
+    setIncludeUChannelDetail,
   ]);
 
   if (isLoading) {

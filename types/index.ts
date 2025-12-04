@@ -1,21 +1,32 @@
 export interface WindowType {
   id: number;
   windowType: string;
+  windowGroup: string;
   imageURL: string;
   windowTrack: number;
 }
 
+export interface MaterialTypeOption {
+  name: string;
+  field: string;
+  rate: number;
+}
 export interface MaterialType {
   id: number;
   label: string;
   field: string;
   unit: string;
   rate: number;
-  type?: Array<{
-    name: string;
-    field: string;
-    rate: number;
-  }>;
+  type?: MaterialTypeOption[];
+  windowTypeId: number[];
+}
+export interface FullMaterialType {
+  id: number;
+  label: string;
+  field: string;
+  unit: string;
+  rate: number;
+  type?: Record<string, MaterialTypeOption[]>;
   windowTypeId: number[];
 }
 
@@ -76,6 +87,7 @@ export interface EstimationData {
   "3 track Deep Domal"?: PipeEstimation;
   SP?: PipeEstimation;
   DP?: PipeEstimation;
+  "U Channel"?: PipeEstimation;
 }
 
 export type TrackType =
@@ -87,7 +99,8 @@ export type TrackType =
   | "track"
   | "shutter"
   | "vchannel"
-  | "spdp";
+  | "spdp"
+  | "uchannel";
 
 export interface OptimizationResult {
   pipe: number;

@@ -111,6 +111,20 @@ export const getShutterTrackCuttingEstimation = (
   );
 };
 
+export const getUChannelCuttingEstimation = (
+  inputData: any,
+): PipeEstimation => {
+  const uChannelRequireCuts = uChannelRequiredCuts(inputData);
+  const uChannelPipeSizes: number[] = getPipeSizes(inputData, "uchannel");
+  return optimizePipesUtilisation(
+    uChannelRequireCuts,
+    uChannelPipeSizes,
+    inputData.uChannelExtraLength,
+    inputData,
+    "uchannel",
+  );
+};
+
 export const getInterLockCuttingEstimation = (
   inputData: any,
 ): PipeEstimation => {

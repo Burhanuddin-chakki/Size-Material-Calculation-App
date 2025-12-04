@@ -10,6 +10,7 @@ import {
   getTrackBottomCuttingEstimation,
   getTrackCuttingEstimation,
   getTrackTopCuttingEstimation,
+  getUChannelCuttingEstimation,
   getVChannelCuttingEstimation,
 } from "../services/track.service";
 import {
@@ -91,6 +92,9 @@ export default function MaterialPrice({
     if (/(Domal)/.test(windowType)) {
       estimation["Track"] = getTrackCuttingEstimation(inputData);
       estimation["Shutter"] = getShutterTrackCuttingEstimation(inputData);
+      if (inputData.showUChannelPipeDetails) {
+        estimation["U Channel"] = getUChannelCuttingEstimation(inputData);
+      }
     }
     if (/(Deep)/.test(windowType)) {
       estimation["V Channel"] = getVChannelCuttingEstimation(inputData);

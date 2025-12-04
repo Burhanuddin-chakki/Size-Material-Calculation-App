@@ -12,7 +12,7 @@
     "label": "L Connector",
     "field": "lConnector",
     "unit": "piece",
-    "rate": 12,
+    "rate": 20,
     "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
@@ -20,7 +20,7 @@
     "label": "L Patti",
     "field": "lPatti",
     "unit": "piece",
-    "rate": 8,
+    "rate": 1.5,
     "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
@@ -29,23 +29,78 @@
     "field": "bearing",
     "unit": "piece",
     "rate": 0,
-    "type": [
-      {
-        "name": "Ohm",
-        "field": "ohm",
-        "rate": 7.5
-      },
-      {
-        "name": "Skill Black",
-        "field": "skillBlack",
-        "rate": 10
-      },
-      {
-        "name": "Skyring",
-        "field": "skyring",
-        "rate": 16
-      }
-    ],
+    "type": {
+      "Normal": [
+        {
+          "name": "Ohm",
+          "field": "ohmBearing",
+          "rate": 7.5
+        },
+        {
+          "name": "Skill Black",
+          "field": "skillBlackBearing",
+          "rate": 10
+        },
+        {
+          "name": "Skyring",
+          "field": "skyringBearing",
+          "rate": 16
+        }
+      ],
+      "18/60": [
+        {
+          "name": "Ohm",
+          "field": "ohmBearing",
+          "rate": 7.5
+        },
+        {
+          "name": "Skill Black",
+          "field": "skillBlackBearing",
+          "rate": 10
+        },
+        {
+          "name": "Skyring",
+          "field": "skyringBearing",
+          "rate": 16
+        }
+      ],
+      "Domal": [
+        {
+          "name": "Eagle Boss",
+          "field": "eagleBossBearing",
+          "rate": 55
+        },
+        {
+          "name": "Rapchik",
+          "field": "rapchikBearing",
+          "rate": 60
+        },
+        {
+          "name": "Rapchik Premium",
+          "field": "rapchikPremiumBearing",
+          "rate": 65
+        }
+      ],
+      "Mini Domal": [
+        {
+          "name": "Eagle Boss",
+          "field": "eagleBossBearing",
+          "rate": 40
+        },
+        {
+          "name": "Rapchik",
+          "field": "rapchikBearing",
+          "rate": 45
+        }
+      ],
+      "Deep Domal": [
+        {
+          "name": "Rapchik",
+          "field": "rapchikBearing",
+          "rate": 65
+        }
+      ]
+    },
     "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   },
   {
@@ -62,37 +117,82 @@
     "field": "lock",
     "unit": "piece",
     "rate": 0,
-    "type": [
-      {
-        "name": "Eagle Boss",
-        "field": "eagleBossLock",
-        "rate": 17.5
-      },
-      {
-        "name": "Elbows",
-        "field": "elbowsLock",
-        "rate": 20
-      }
-    ],
-    "windowTypeId": [1, 2, 5, 6, 7, 8, 9, 10]
+    "type": {
+      "Normal": [
+        {
+          "name": "Eagle Boss",
+          "field": "eagleBossLock",
+          "rate": 17.5
+        },
+        {
+          "name": "Elbows",
+          "field": "elbowsLock",
+          "rate": 20
+        },
+        {
+          "name": "Full Metal",
+          "field": "fullMetalLock",
+          "rate": 42.5
+        }
+      ],
+      "18/60": [
+        {
+          "name": "Eagle Boss",
+          "field": "eagleBossLock",
+          "rate": 17.5
+        },
+        {
+          "name": "Elbows",
+          "field": "elbowsLock",
+          "rate": 20
+        },
+        {
+          "name": "Full Metal",
+          "field": "fullMetalLock",
+          "rate": 42.5
+        },
+        {
+          "name": "EagleBoss Premium",
+          "field": "eagleBossPremiumLock",
+          "rate": 50
+        }
+      ],
+      "Domal": [
+        {
+          "name": "V-Vision",
+          "field": "vVisionLock",
+          "rate": 120
+        },
+        {
+          "name": "etto",
+          "field": "ettoLock",
+          "rate": 250
+        }
+      ],
+      "Mini Domal": [
+        {
+          "name": "Dolphin",
+          "field": "dolphinLock",
+          "rate": 120
+        }
+      ],
+      "Deep Domal": [
+        {
+          "name": "V-Vision",
+          "field": "vVisionLock",
+          "rate": 120
+        },
+        {
+          "name": "etto",
+          "field": "ettoLock",
+          "rate": 250
+        }
+      ]
+    },
+    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   },
   {
     "id": 7,
-    "label": "Lock",
-    "field": "lock",
-    "unit": "piece",
-    "rate": 0,
-    "type": [
-      {
-        "name": "Eagle Boss",
-        "field": "eagleBossLock",
-        "rate": 50
-      }
-    ],
-    "windowTypeId": [3, 4]
-  },
-  {
-    "id": 8,
     "label": "PVC Brush",
     "field": "pvcBrush",
     "unit": "window",
@@ -100,7 +200,7 @@
     "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   },
   {
-    "id": 9,
+    "id": 8,
     "label": "Glass Rubber",
     "field": "glassRubber",
     "unit": "kg",
@@ -108,19 +208,27 @@
     "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   },
   {
+    "id": 9,
+    "label": "Glass",
+    "field": "glass",
+    "unit": "sqft",
+    "rate": 45,
+    "windowTypeId": [1, 2, 3, 4, 7, 8]
+  },
+  {
     "id": 10,
     "label": "Glass",
     "field": "glass",
     "unit": "sqft",
-    "rate": 48,
-    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    "rate": 85,
+    "windowTypeId": [5, 6, 9, 10]
   },
   {
     "id": 11,
     "label": "Kekda",
     "field": "kekda",
     "unit": "piece",
-    "rate": 11,
+    "rate": 14,
     "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
@@ -128,16 +236,16 @@
     "label": "Male Female",
     "field": "maleFemale",
     "unit": "piece",
-    "rate": 3,
+    "rate": 14,
     "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
     "id": 13,
     "label": "Water Guide",
     "field": "waterGuide",
-    "rate": 4,
-    "windowTypeId": [5, 6, 7, 8, 9, 10],
-    "unit": "piece"
+    "unit": "piece",
+    "rate": 14,
+    "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
     "id": 14,
@@ -168,11 +276,19 @@
     "label": "Labour",
     "field": "labour",
     "unit": "sqft",
-    "rate": 30,
-    "windowTypeId": [1, 2]
+    "rate": 25,
+    "windowTypeId": [1]
   },
   {
     "id": 18,
+    "label": "Labour",
+    "field": "labour",
+    "unit": "sqft",
+    "rate": 30,
+    "windowTypeId": [2]
+  },
+  {
+    "id": 19,
     "label": "Labour",
     "field": "labour",
     "unit": "sqft",
@@ -180,7 +296,7 @@
     "windowTypeId": [3, 4]
   },
   {
-    "id": 19,
+    "id": 20,
     "label": "Labour",
     "field": "labour",
     "unit": "sqft",
@@ -188,27 +304,41 @@
     "windowTypeId": [5, 6, 7, 8, 9, 10]
   },
   {
-    "id": 20,
+    "id": 21,
     "label": "U-Channel",
     "field": "uChannel",
     "unit": "piece",
     "rate": 0,
-    "type": [
-      {
-        "name": "Plastic 9 Feet",
-        "field": "plastic9Feet",
-        "rate": 20
-      },
-      {
-        "name": "Aluminium 12 Feet",
-        "field": "aluminium12Feet",
-        "rate": 75
-      }
-    ],
-    "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    "type": {
+      "Normal": [
+        {
+          "name": "Plastic 9 Feet",
+          "field": "plastic9Feet",
+          "rate": 20
+        },
+        {
+          "name": "Aluminium 12 Feet",
+          "field": "aluminium12Feet",
+          "rate": 75
+        }
+      ],
+      "18/60": [
+        {
+          "name": "Plastic 9 Feet",
+          "field": "plastic9Feet",
+          "rate": 20
+        },
+        {
+          "name": "Aluminium 12 Feet",
+          "field": "aluminium12Feet",
+          "rate": 75
+        }
+      ]
+    },
+    "windowTypeId": [1, 2, 3, 4]
   },
   {
-    "id": 21,
+    "id": 22,
     "label": "Grill Jali",
     "field": "grillJali",
     "unit": "sqft",
@@ -217,7 +347,7 @@
     "windowTypeId": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   },
   {
-    "id": 22,
+    "id": 23,
     "label": "Screw 60/6",
     "field": "screw60_6",
     "unit": "piece",
@@ -225,7 +355,7 @@
     "windowTypeId": [1, 2, 3, 4]
   },
   {
-    "id": 23,
+    "id": 24,
     "label": "Screw 25/6",
     "field": "screw25_6",
     "unit": "piece",

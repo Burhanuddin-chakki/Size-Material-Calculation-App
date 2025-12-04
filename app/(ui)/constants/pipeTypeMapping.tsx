@@ -150,7 +150,7 @@ export const pipeTypeRateAndWeightMapping: Record<TrackType, string[]> = {
     "shutterTrackType",
     "shutterTrackRate",
     "smallShutterTrackWeight",
-    " bigShutterTrackWeight",
+    "bigShutterTrackWeight",
     "shutterPipeSize180",
     "shutterPipeSize192",
   ],
@@ -210,5 +210,13 @@ export const pipeTypeRateAndWeightMapping: Record<TrackType, string[]> = {
     "spdpPipeSize180",
     "spdpPipeSize192",
     "spdpType",
+  ],
+  uchannel: [
+    "uChannelType",
+    "uChannelRate",
+    "smallUChannelWeight",
+    "bigUChannelWeight",
+    "uChannelPipeSize180",
+    "uChannelPipeSize192",
   ],
 };

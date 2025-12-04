@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { MaterialType } from "@/types";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 interface MaterialPriceProps {
   materialWithType: MaterialType[];
@@ -18,20 +18,14 @@ export default function MaterialPrice({
     watch,
   } = useFormContext();
 
-  const isInitialized = useRef(false);
-
   useEffect(() => {
-    if (!isInitialized.current) {
-      console.log("MaterialWithType:", materialWithType);
-      materialWithType.forEach((item: MaterialType) => {
-        setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
-        setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);
-      });
-      materialWithoutType.forEach((item: MaterialType) => {
-        setValue(item.field, item.rate);
-      });
-      isInitialized.current = true;
-    }
+    materialWithType.forEach((item: MaterialType) => {
+      setValue(`${item.field}_type`, item.type ? item.type[0].name : "");
+      setValue(`${item.field}_rate`, item.type ? item.type[0].rate : 0);
+    });
+    materialWithoutType.forEach((item: MaterialType) => {
+      setValue(item.field, item.rate);
+    });
   }, [materialWithType, materialWithoutType, setValue]);
 
   return (

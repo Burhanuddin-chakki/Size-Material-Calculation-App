@@ -15,6 +15,7 @@ import {
   getSchemaForWindowsPipe,
 } from "@/app/(ui)/services/schema.service";
 import { spdpPipeSchema } from "@/app/(ui)/components/spdp-detail";
+import { uChannelPipeSchema } from "../components/uchannel-detail";
 
 export const useWindowEstimation = (windowId: number) => {
   // State
@@ -24,10 +25,12 @@ export const useWindowEstimation = (windowId: number) => {
   const [numberOfTrack, setNumberOfTrack] = useState<number>(2);
   const [materialList, setMaterialList] = useState<MaterialType[]>([]);
   const [windowType, setWindowType] = useState<string>("");
+  const [windowGroup, setWindowGroup] = useState<string>("");
   const [pipeType, setPipeType] = useState<PipeType[]>([]);
   const [pipeDetail, setPipeDetail] = useState<PipeDetailType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [includeSpDpSchema, setIncludeSpDpSchema] = useState(false);
+  const [includeUChannelDetail, setIncludeUChannelDetail] = useState(false);
   const [showUChannelSections, setShowUChannelSections] = useState(false);
   const [materialWithType, setMaterialWithType] = useState<MaterialType[]>([]);
   const [materialWithoutType, setMaterialWithoutType] = useState<
@@ -70,9 +73,20 @@ export const useWindowEstimation = (windowId: number) => {
         ...spdpPipeSchema.shape,
       });
     }
+    if (includeUChannelDetail) {
+      schema = schema.extend({
+        ...uChannelPipeSchema.shape,
+      });
+    }
 
     return schema;
-  }, [windowType, materialList, includeSpDpSchema, showUChannelSections]);
+  }, [
+    windowType,
+    materialList,
+    includeSpDpSchema,
+    includeUChannelDetail,
+    showUChannelSections,
+  ]);
 
   type FormData = z.infer<typeof parentSchema>;
 
@@ -90,9 +104,20 @@ export const useWindowEstimation = (windowId: number) => {
     | "DP"
     | "none"
     | undefined;
-  const showUChannelDetail =
-    (watch as any)("isContainMacharJali") &&
-    !(watch as any)("isContainGrillJali");
+
+  // Watch form values to trigger recalculation
+  const isContainMacharJali = (watch as any)("isContainMacharJali");
+  const isContainGrillJali = (watch as any)("isContainGrillJali");
+
+  const showUChannelPipeDetails: boolean = useMemo(() => {
+    if (!windowGroup) return false;
+    const temp =
+      ["Domal", "Mini Domal", "Deep Domal"].includes(windowGroup) &&
+      isContainMacharJali &&
+      !isContainGrillJali;
+    return temp;
+  }, [windowGroup, isContainMacharJali, isContainGrillJali]);
+  const showUChannelSectionDetail = isContainMacharJali && !isContainGrillJali;
 
   // Update form resolver when schema changes
   useEffect(() => {
@@ -102,25 +127,30 @@ export const useWindowEstimation = (windowId: number) => {
   }, [parentSchema, isLoading, methods]);
 
   useEffect(() => {
-    setShowUChannelSections(showUChannelDetail);
-  }, [showUChannelDetail]);
+    setShowUChannelSections(showUChannelSectionDetail);
+  }, [showUChannelSectionDetail]);
 
   // Data fetching
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [windowDetail, materials, pipes, details] = await Promise.all([
+      const [windowDetail, pipes, details] = await Promise.all([
         fetchWindowfromWindowId(windowId),
-        fetchMaterialList(windowId),
         fetchPipeType(),
         fetchPipeDetail(windowId),
       ]);
-
-      setNumberOfTrack(windowDetail.windowTrack);
       setWindowType(windowDetail.windowType);
-      setMaterialList(materials);
+      setWindowGroup(windowDetail.windowGroup);
+      setNumberOfTrack(windowDetail.windowTrack);
       setPipeType(pipes);
       setPipeDetail(details);
+
+      const materials = await fetchMaterialList(
+        windowId,
+        windowDetail.windowGroup,
+      );
+
+      setMaterialList(materials);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -147,7 +177,8 @@ export const useWindowEstimation = (windowId: number) => {
   const onSubmit = async (data: FormData) => {
     const inputObject: any = { ...data };
     inputObject["numberOfTrack"] = Number(numberOfTrack);
-    console.log("Form Submitted with data:", inputObject);
+    inputObject["windowGroup"] = windowGroup;
+    inputObject["showUChannelPipeDetails"] = showUChannelPipeDetails;
     setMaterialEstimationData(inputObject);
     setShowEstimationDetailView(true);
   };
@@ -168,6 +199,7 @@ export const useWindowEstimation = (windowId: number) => {
     numberOfTrack,
     materialList,
     windowType,
+    windowGroup,
     pipeType,
     pipeDetail,
     isLoading,
@@ -177,6 +209,8 @@ export const useWindowEstimation = (windowId: number) => {
     materialWithoutType,
     materialEstimationData,
     selectedSpOrDpPipe,
+    showUChannelPipeDetails,
+    setIncludeUChannelDetail,
 
     // Form
     methods,

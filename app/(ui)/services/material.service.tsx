@@ -107,7 +107,9 @@ const getGlassQuantity = (inputData: any): MaterialEstimationResult => {
   return { quantity, rate: inputData.glass, totalPrice };
 };
 const getGlassRubberQuantity = (inputData: any): MaterialEstimationResult => {
-  const quantity = 800;
+  const quantity = ["Domal", "Deep Domal"].includes(inputData.windowGroup)
+    ? 1200
+    : 800;
   const totalPrice = (inputData.glassRubber / 1000) * quantity;
   return { quantity, rate: inputData.glassRubber, totalPrice };
 };
