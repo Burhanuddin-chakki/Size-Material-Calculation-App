@@ -319,7 +319,7 @@ function optimizePipesUtilisation(
   return finalEstimation;
 }
 
-export const getPipeWithOptimalCuts = (
+export const getPipeWithOptimalCutsOld = (
   requiredCuts: number[],
   pipeSizes: number[],
   extraPipeSize: number[],
@@ -372,6 +372,77 @@ export const getPipeWithOptimalCuts = (
   }
   return { results, usedExtraSizes };
 };
+
+export const getPipeWithOptimalCuts = (
+  requiredCuts: number[],
+  pipeSizes: number[],
+  extraPipeSize: number[],
+) : { results: OptimizationResult[], usedExtraSizes: number[] } => {
+  // Sort cuts descending
+  const sortedCuts = [...requiredCuts].sort((a, b) => b - a);
+    const usedExtraSizes = [];
+  const pipes = [];
+    let remainingPipeSizes = extraPipeSize.slice();
+
+  for (const cut of sortedCuts) {
+    let placed = false;
+    const allPipeSizes = pipeSizes.concat(remainingPipeSizes);
+
+    // Try to place cut in existing pipes
+    for (const pipe of pipes) {
+      if (pipe.remaining >= cut) {
+        pipe.cuts.push(cut);
+        pipe.remaining -= cut;
+        placed = true;
+        break;
+      }
+    }
+
+    // If no existing pipe fits, create a new optimal pipe
+    if (!placed) {
+      let bestPipeSize = null;
+      let minWaste = Infinity;
+
+      for (const size of allPipeSizes) {
+        if (size >= cut) {
+          const waste = size - cut;
+          if (waste < minWaste) {
+            minWaste = waste;
+            bestPipeSize = size;
+          }
+        }
+      }
+
+      if (bestPipeSize === null) {
+        // throw new Error(`Cut size ${cut} cannot fit in any pipe`);
+        continue;
+      }
+      if(extraPipeSize.length && remainingPipeSizes.includes(bestPipeSize)){
+        const idx = remainingPipeSizes.indexOf(bestPipeSize);
+        if(idx !== -1){
+            usedExtraSizes.push(bestPipeSize);
+            remainingPipeSizes.splice(idx,1);
+        }
+        // console.log("Using extra pipe size for cut:", cut, bestPipeSize);
+      }
+
+      pipes.push({
+        total: bestPipeSize,
+        remaining: bestPipeSize - cut,
+        cuts: [cut]
+      });
+    }
+  }
+  const results = pipes.map((pipe) => ({
+    pipe: pipe.total,
+    cuts: pipe.cuts,
+    waste: pipe.remaining
+  }))
+  return {
+    results,
+    usedExtraSizes
+  };
+}
 
 function getAllSumCombinations(numbers: number[]): CombinationResult[] {
   const result: CombinationResult[] = [];
