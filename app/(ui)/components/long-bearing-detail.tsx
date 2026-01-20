@@ -130,7 +130,7 @@ export default function LongBearingDetail(props: LongBearingDetailProps) {
               className={`form-control ${errors.longBearingPipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("longBearingPipeRate", { valueAsNumber: true })}
             />
@@ -237,7 +237,7 @@ export default function LongBearingDetail(props: LongBearingDetailProps) {
                       className={`form-control ${(errors.extraLongBearingPipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Long-Bearing Length"
                       aria-label="long-bearing-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraLongBearingPipeLength.${index}`, {
                         valueAsNumber: true,

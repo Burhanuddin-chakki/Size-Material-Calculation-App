@@ -128,7 +128,7 @@ export default function TrackTopDetail(props: TrackTopDetailProps) {
               className={`form-control ${errors.trackTopPipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("trackTopPipeRate", { valueAsNumber: true })}
             />
@@ -227,7 +227,7 @@ export default function TrackTopDetail(props: TrackTopDetailProps) {
                       className={`form-control ${(errors.extraTrackTopPipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Track Top Length"
                       aria-label="track-top-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraTrackTopPipeLength.${index}`, {
                         valueAsNumber: true,

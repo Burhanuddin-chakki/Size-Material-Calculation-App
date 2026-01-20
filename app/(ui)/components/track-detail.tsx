@@ -119,7 +119,7 @@ export default function TrackDetail(props: TrackDetailProps) {
               className={`form-control ${errors.trackPipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("trackPipeRate", { valueAsNumber: true })}
             />
@@ -216,7 +216,7 @@ export default function TrackDetail(props: TrackDetailProps) {
                       className={`form-control ${(errors.extraTrackPipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Track Length"
                       aria-label="track-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraTrackPipeLength.${index}`, {
                         valueAsNumber: true,

@@ -144,7 +144,7 @@ export default function SpdpDetail(props: spdpDetailProps) {
               className={`form-control ${errors.spdpPipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("spdpPipeRate", { valueAsNumber: true })}
             />
@@ -275,7 +275,7 @@ export default function SpdpDetail(props: spdpDetailProps) {
                       className={`form-control ${(errors.extraSpdpPipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="SP/DP Length"
                       aria-label="spdp-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraSpdpPipeLength.${index}`, {
                         valueAsNumber: true,

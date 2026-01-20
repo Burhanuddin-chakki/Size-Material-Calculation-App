@@ -124,7 +124,7 @@ export default function HandleDetail(props: HandleDetailProps) {
               className={`form-control ${errors.handlePipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("handlePipeRate", { valueAsNumber: true })}
             />
@@ -221,7 +221,7 @@ export default function HandleDetail(props: HandleDetailProps) {
                       className={`form-control ${(errors.extraHandlePipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Handle Length"
                       aria-label="handle-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraHandlePipeLength.${index}`, {
                         valueAsNumber: true,

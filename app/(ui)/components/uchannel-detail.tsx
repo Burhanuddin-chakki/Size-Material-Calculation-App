@@ -134,7 +134,7 @@ export default function UChannelDetail(props: UChannelDetailProps) {
               className={`form-control ${errors.uChannelRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("uChannelRate", { valueAsNumber: true })}
             />
@@ -235,7 +235,7 @@ export default function UChannelDetail(props: UChannelDetailProps) {
                       className={`form-control ${(errors.uChannelExtraLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="U-Channel Length"
                       aria-label="u-channel-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`uChannelExtraLength.${index}`, {
                         valueAsNumber: true,

@@ -128,7 +128,7 @@ export default function TrackBottomDetail(props: TrackBottomDetailProps) {
               className={`form-control ${errors.trackBottomPipeRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("trackBottomPipeRate", { valueAsNumber: true })}
             />
@@ -235,7 +235,7 @@ export default function TrackBottomDetail(props: TrackBottomDetailProps) {
                       className={`form-control ${(errors.extraTrackBottomPipeLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Track-Bottom Length"
                       aria-label="track-bottom-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`extraTrackBottomPipeLength.${index}`, {
                         valueAsNumber: true,

@@ -132,7 +132,7 @@ export default function ShutterDetail(props: ShutterDetailProps) {
               className={`form-control ${errors.shutterTrackRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("shutterTrackRate", { valueAsNumber: true })}
             />
@@ -233,7 +233,7 @@ export default function ShutterDetail(props: ShutterDetailProps) {
                       className={`form-control ${(errors.shutterExtraTrackLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="Shutter Length"
                       aria-label="shutter-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`shutterExtraTrackLength.${index}`, {
                         valueAsNumber: true,

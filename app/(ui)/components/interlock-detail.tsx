@@ -129,7 +129,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
               className={`form-control ${errors.interLockRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("interLockRate", { valueAsNumber: true })}
             />
@@ -236,7 +236,7 @@ export default function InterLockDetail(props: InterLockDetailProps) {
                       className={`form-control ${(errors.interLockExtraLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="InterLock Length"
                       aria-label="interlock-length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`interLockExtraLength.${index}`, {
                         valueAsNumber: true,

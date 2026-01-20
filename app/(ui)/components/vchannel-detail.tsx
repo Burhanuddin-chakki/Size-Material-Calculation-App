@@ -126,7 +126,7 @@ export default function VChannelDetail(props: VChannelDetailProps) {
               className={`form-control ${errors.vChannelRate ? "is-invalid" : ""}`}
               placeholder="Rate"
               aria-label="rate"
-              step="1.00"
+              step="0.01"
               onWheel={(e) => e.currentTarget.blur()}
               {...register("vChannelRate", { valueAsNumber: true })}
             />
@@ -227,7 +227,7 @@ export default function VChannelDetail(props: VChannelDetailProps) {
                       className={`form-control ${(errors.vChannelExtraLength as any)?.[index] ? "is-invalid" : ""}`}
                       placeholder="V-Channel Length"
                       aria-label="V-Channel-Length"
-                      step="1.00"
+                      step="0.01"
                       onWheel={(e) => e.currentTarget.blur()}
                       {...register(`vChannelExtraLength.${index}`, {
                         valueAsNumber: true,
