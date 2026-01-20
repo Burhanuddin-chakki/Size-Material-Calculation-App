@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { EstimationData, MaterialEstimation, MaterialType } from "@/types";
+import { EstimationData, MaterialEstimation, MaterialType, WindowInputDetails } from "@/types";
 import {
   calculateTrackTotalAmount,
   getHandleTrackCuttingEstimation,
@@ -12,6 +12,7 @@ import {
   getTrackTopCuttingEstimation,
   getUChannelCuttingEstimation,
   getVChannelCuttingEstimation,
+  isWindow3Track4Partition,
 } from "../services/track.service";
 import {
   calculateMaterialTotalAmount,
@@ -33,6 +34,9 @@ export default function MaterialPrice({
   windowType,
   inputData,
 }: MaterialPriceProps) {
+  //Sp and DP selected for any of the window
+  const isSpDpPipeSelected = inputData.windows.some((window: WindowInputDetails) => window.selectedSpOrDpPipe === "SP" || window.selectedSpOrDpPipe === "DP");
+
   // ✅ Memoized material estimation - recalculates only when deps change
   const materialEstimationDetail = useMemo((): MaterialEstimation[] => {
     const materialEstimationList: MaterialEstimation[] = [];
@@ -42,27 +46,29 @@ export default function MaterialPrice({
         material.field !== "macharJali" &&
         material.field !== "grillJali" &&
         material.field !== "uChannel" &&
-        material.field !== "screw25_6"
+        material.field !== "screw25_6" &&
+        material.field !== "centerMeeting"
       ) {
         isMaterialEstimationNeeded = true;
       }
-      if (material.field === "macharJali" && inputData.isContainMacharJali) {
+      if (material.field === "macharJali" && inputData.windows.some((window: WindowInputDetails) => window.isContainMacharJali)) {
         isMaterialEstimationNeeded = true;
       }
-      if (material.field === "grillJali" && inputData.isContainGrillJali) {
+      if (material.field === "grillJali" && inputData.windows.some((window: WindowInputDetails) => window.isContainGrillJali)) {
         isMaterialEstimationNeeded = true;
       }
       if (
-        material.field === "uChannel" &&
-        inputData.isContainMacharJali &&
-        !inputData.isContainGrillJali
+        material.field === "uChannel" && inputData.windows.some((window: WindowInputDetails) => window.isContainMacharJali && !window.isContainGrillJali)
       ) {
         isMaterialEstimationNeeded = true;
       }
       if (
-        material.field === "screw25_6" &&
-        (inputData.selectedSpOrDpPipe === "DP" ||
-          inputData.selectedSpOrDpPipe === "SP")
+        material.field === "screw25_6" && isSpDpPipeSelected
+      ) {
+        isMaterialEstimationNeeded = true;
+      }
+      if (
+        material.field === "centerMeeting" && inputData.windows.some((window: WindowInputDetails) => isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors))
       ) {
         isMaterialEstimationNeeded = true;
       }
@@ -105,11 +111,8 @@ export default function MaterialPrice({
       estimation["Handle"] = getHandleTrackCuttingEstimation(inputData);
       estimation["Long Bearing"] = getLongBearingCuttingEstimation(inputData);
     }
-    if (
-      inputData.selectedSpOrDpPipe === "SP" ||
-      inputData.selectedSpOrDpPipe === "DP"
-    ) {
-      estimation[inputData.selectedSpOrDpPipe as "SP" | "DP"] =
+    if (isSpDpPipeSelected) {
+      estimation[inputData.windows.find((window: WindowInputDetails) => window.selectedSpOrDpPipe === "SP" || window.selectedSpOrDpPipe === "DP")?.selectedSpOrDpPipe as "SP" | "DP"] =
         getSPDPTrackCuttingEstimation(inputData);
     }
     return estimation;

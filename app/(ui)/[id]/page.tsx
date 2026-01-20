@@ -68,7 +68,7 @@ export default function WindowTypePage() {
     materialWithType,
     materialWithoutType,
     materialEstimationData,
-    selectedSpOrDpPipe,
+    isSpOrDpPipeSelected,
     showUChannelPipeDetails,
     setIncludeUChannelDetail,
     methods,
@@ -87,7 +87,7 @@ export default function WindowTypePage() {
       let components = [...pipeTypeToComponentMapping[windowType]];
 
       //Add SpdpDetail component conditionally
-      if (selectedSpOrDpPipe === "SP" || selectedSpOrDpPipe === "DP") {
+      if (isSpOrDpPipeSelected) {
         if (!components.includes(SpdpDetail)) components.push(SpdpDetail);
         setIncludeSpDpSchema(true);
       } else {
@@ -121,7 +121,7 @@ export default function WindowTypePage() {
     windowType,
     pipeType,
     pipeDetail,
-    selectedSpOrDpPipe,
+    isSpOrDpPipeSelected,
     setIncludeSpDpSchema,
     showUChannelPipeDetails,
     setIncludeUChannelDetail,

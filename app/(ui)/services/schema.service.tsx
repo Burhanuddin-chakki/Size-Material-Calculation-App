@@ -44,12 +44,16 @@ export const getDefaultFormValues = (
   pipeType: PipeType[],
 ) => {
   let defaults: any = {
-    height: 0,
-    width: 0,
-    numberOfDoors: 2,
-    isContainMacharJali: true,
-    isContainGrillJali: true,
-    selectedSpOrDpPipe: "none",
+    windows: [
+      {
+        height: 0,
+        width: 0,
+        numberOfDoors: 2,
+        isContainMacharJali: false,
+        isContainGrillJali: false,
+        selectedSpOrDpPipe: "none",
+      },
+    ],
     interLockType: pipeType.length > 0 ? pipeType[0]?.color || "" : "",
     interLockRate: pipeType.length > 0 ? pipeType[0]?.ratePerKg || 0 : 0,
     interLockExtraLength: [],

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MaterialType, PipeDetailType, PipeType } from "@/types";
+import { MaterialType, PipeDetailType, PipeType, WindowInputDetails } from "@/types";
 import {
   fetchMaterialList,
   fetchPipeDetail,
@@ -99,25 +99,21 @@ export const useWindowEstimation = (windowId: number) => {
   });
 
   const { watch } = methods;
-  const selectedSpOrDpPipe = (watch as any)("selectedSpOrDpPipe") as
-    | "SP"
-    | "DP"
-    | "none"
-    | undefined;
 
   // Watch form values to trigger recalculation
-  const isContainMacharJali = (watch as any)("isContainMacharJali");
-  const isContainGrillJali = (watch as any)("isContainGrillJali");
+  const windows = (watch as any)("windows");
+
+  const showUChannelSectionDetail = windows?.some((window: WindowInputDetails) => (window.isContainMacharJali && !window.isContainGrillJali));
+  const isSpOrDpPipeSelected = windows?.some((window: WindowInputDetails) => window.selectedSpOrDpPipe === "SP" || window.selectedSpOrDpPipe === "DP");  
 
   const showUChannelPipeDetails: boolean = useMemo(() => {
     if (!windowGroup) return false;
     const temp =
-      ["Domal", "Mini Domal", "Deep Domal"].includes(windowGroup) &&
-      isContainMacharJali &&
-      !isContainGrillJali;
+      ["Domal", "Mini Domal", "Deep Domal"].includes(windowGroup) && showUChannelSectionDetail;
     return temp;
-  }, [windowGroup, isContainMacharJali, isContainGrillJali]);
-  const showUChannelSectionDetail = isContainMacharJali && !isContainGrillJali;
+  }, [windowGroup, showUChannelSectionDetail]);
+
+  //To show uchannel as material dropdown
 
   // Update form resolver when schema changes
   useEffect(() => {
@@ -208,7 +204,7 @@ export const useWindowEstimation = (windowId: number) => {
     materialWithType,
     materialWithoutType,
     materialEstimationData,
-    selectedSpOrDpPipe,
+    isSpOrDpPipeSelected,
     showUChannelPipeDetails,
     setIncludeUChannelDetail,
 

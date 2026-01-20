@@ -6,12 +6,14 @@ import {
   OptimizationResult,
   PipeEstimation,
   TrackType,
+  WindowInputDetails,
 } from "@/types";
 import { getNoOfPannels, roundToTwoDecimals } from "./material.service";
 import {
   minWasteLimit,
   pipeTypeRateAndWeightMapping,
 } from "../constants/pipeTypeMapping";
+import { is } from "zod/locales";
 
 const getPipeSizes = (inputData: any, trackType: TrackType): number[] => {
   const pipeSizes: number[] = [];
@@ -167,55 +169,105 @@ export const getSPDPTrackCuttingEstimation = (
 };
 
 const getTrackRequiredCuts = (inputData: any) => {
-  return [inputData.height, inputData.width, inputData.height, inputData.width];
+  const requiredCuts: number[] = []
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    requiredCuts.push(...[window.height, window.width, window.height, window.width]);
+  })
+  return requiredCuts;
 };
 const getTrackTopRequiredCuts = (inputData: any) => {
-  return [inputData.height, inputData.width, inputData.height];
+  const requiredCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    requiredCuts.push(window.height, window.width, window.height);
+  });
+  return requiredCuts;
 };
 const getTrackBottomRequiredCuts = (inputData: any) => {
-  return [inputData.width];
+  const requiredCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    requiredCuts.push(window.width);
+  });
+  return requiredCuts;
 };
 const getHandleTrackRequiredCuts = (inputData: any) => {
-  const iteration = getNoOfPannels(inputData);
   const requireCuts: number[] = [];
-  for (let i = 0; i < iteration; i++) {
-    requireCuts.push(inputData.height);
-  }
+  inputData.windows.forEach((window: WindowInputDetails) => {
+      const iteration = isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors) ? 6 : getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors);
+      for (let i = 0; i < iteration; i++) {
+        requireCuts.push(window.height);
+      }
+      
+  })
   return requireCuts;
 };
 const getLongBearingRequiredCuts = (inputData: any) => {
-  const iteration = getNoOfPannels(inputData);
-  const partitionWidth = inputData.width / inputData.numberOfDoors;
   const requireCuts: number[] = [];
-  for (let i = 0; i < iteration; i++) {
-    requireCuts.push(partitionWidth);
-    requireCuts.push(partitionWidth);
-  }
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    const iteration = isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors) ? 6 : getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors);
+    const partitionWidth = roundToTwoDecimals(window.width / window.numberOfDoors);
+    for (let i = 0; i < iteration; i++) {
+      requireCuts.push(...[partitionWidth, partitionWidth]);
+    }
+  });
   return requireCuts;
 };
 
 const getShutterTrackRequiredCuts = (inputData: any) => {
   const requireCuts: number[] = [];
-  const iteration = getNoOfPannels(inputData);
-  const partitionWidth = inputData.width / inputData.numberOfDoors;
-  for (let i = 0; i < iteration * 2; i++) {
-    requireCuts.push(partitionWidth);
-    requireCuts.push(inputData.height);
-  }
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    const iteration = isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors) ? 6 : getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors);
+    const partitionWidth = roundToTwoDecimals(window.width / window.numberOfDoors);
+    for (let i = 0; i < iteration * 2; i++) {
+      requireCuts.push(partitionWidth);
+      requireCuts.push(window.height);
+    }
+  });
   return requireCuts;
 };
 
 const getInterLockRequiredCuts = (inputData: any) => {
-  return [inputData.height, inputData.width, inputData.height, inputData.width];
+  const requireCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    const iteration = getNoOfInterlock(inputData.numberOfTrack, window.numberOfDoors);
+    for (let i = 0; i < iteration; i++) {
+      requireCuts.push(window.height);
+    }
+  });
+  return requireCuts;
 };
 
 const getVChannelRequiredCuts = (inputData: any) => {
-  return [inputData.width];
+  const requireCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    for (let i = 0; i < inputData.numberOfTrack; i++) {
+      requireCuts.push(window.width);
+    }
+  });
+  return requireCuts;
 };
+
 export const uChannelRequiredCuts = (inputData: any) => {
-  const partitionWidth = inputData.width / inputData.numberOfDoors;
-  return [inputData.height, partitionWidth, inputData.height, partitionWidth];
+  const requireCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    if(window.isContainMacharJali && !window.isContainGrillJali){
+      const partitionWidth = roundToTwoDecimals(window.width / window.numberOfDoors);
+      const cuts = isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors) ? [window.height, partitionWidth, window.height, partitionWidth, window.height, partitionWidth, window.height, partitionWidth] : [window.height, partitionWidth, window.height, partitionWidth]
+      requireCuts.push(...cuts);
+    }
+  })
+  return requireCuts;
 };
+
+export const centerMeetingRequiredCuts = (inputData: any) => {
+  const requireCuts: number[] = [];
+  inputData.windows.forEach((window: WindowInputDetails) => {
+    if(isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors)){
+      const cuts = [window.height, window.height];
+      requireCuts.push(...cuts);
+    }
+  })
+  return requireCuts;
+}
 
 function optimizePipesUtilisation(
   requiredCuts: number[],
@@ -273,24 +325,20 @@ export const getPipeWithOptimalCuts = (
   extraPipeSize: number[],
 ) => {
   const results: OptimizationResult[] = [];
-  const remainingCuts = [...requiredCuts]; // Create a copy
-  let remainingPipeSizes = [...extraPipeSize];
+  const remainingCuts = requiredCuts.slice();
+  let remainingPipeSizes = extraPipeSize.slice();
   const usedExtraSizes: number[] = [];
   while (remainingCuts.length > 0) {
-    // Get all possible combinations from remaining cuts
     const combinations = getAllSumCombinations(remainingCuts);
-    const allPipeSizes =
-      remainingPipeSizes[0] > 0
-        ? [...pipeSizes, ...remainingPipeSizes]
-        : pipeSizes;
-    // Find best combinations for each pipe size
+    const allPipeSizes = (remainingPipeSizes.length > 0 && remainingPipeSizes[0] > 0)
+      ? pipeSizes.concat(remainingPipeSizes)
+      : pipeSizes;
     const bestOptions = findBestCombinations(combinations, allPipeSizes);
 
-    // Select the overall best option (least waste)
-    let selectedOption = null;
+    let selectedOption: OptimizationResult | null = null;
     let bestWaste = Infinity;
-
-    for (const option of bestOptions) {
+    for (let i = 0; i < bestOptions.length; i++) {
+      const option = bestOptions[i];
       if (option.bestCombo && option.leastWaste < bestWaste) {
         bestWaste = option.leastWaste;
         selectedOption = {
@@ -300,29 +348,25 @@ export const getPipeWithOptimalCuts = (
         };
       }
     }
+    if (!selectedOption) break;
 
-    // If no valid combination found, break
-    if (!selectedOption) {
-      break;
+    // Remove the used extra pipe size (if any) in-place for efficiency
+    if (remainingPipeSizes.length > 0 && remainingPipeSizes.includes(selectedOption.pipe)) {
+      const idx = remainingPipeSizes.indexOf(selectedOption.pipe);
+      if (idx !== -1) {
+        usedExtraSizes.push(selectedOption.pipe);
+        remainingPipeSizes.splice(idx, 1);
+      }
     }
 
-    remainingPipeSizes = remainingPipeSizes.filter((size) => {
-      if (size !== selectedOption!.pipe) {
-        return true;
-      } else {
-        usedExtraSizes.push(size);
-        return false;
-      }
-    });
-
-    // Add to results
     results.push(selectedOption);
 
-    // Remove used cuts from remaining cuts
-    for (const cut of selectedOption.cuts) {
-      const index = remainingCuts.indexOf(cut);
-      if (index !== -1) {
-        remainingCuts.splice(index, 1);
+    // Remove used cuts from remainingCuts in-place
+    for (let i = 0; i < selectedOption.cuts.length; i++) {
+      const cut = selectedOption.cuts[i];
+      const idx = remainingCuts.indexOf(cut);
+      if (idx !== -1) {
+        remainingCuts.splice(idx, 1);
       }
     }
   }
@@ -330,34 +374,36 @@ export const getPipeWithOptimalCuts = (
 };
 
 function getAllSumCombinations(numbers: number[]): CombinationResult[] {
-  const results = [];
-  const n = numbers.length;
-
-  // Use bitmasking to generate all possible combinations
-  for (let i = 1; i < 1 << n; i++) {
-    const combo = [];
-    for (let j = 0; j < n; j++) {
-      if (i & (1 << j)) combo.push(numbers[j]);
-    }
-    const sum = combo.reduce((a, b) => a + b, 0);
-    results.push({ combination: combo, sum });
-  }
-
-  // Optional: remove duplicates (since 48,48 repeats)
-  const unique: CombinationResult[] = [];
+  const result: CombinationResult[] = [];
   const seen = new Set();
-  for (const item of results) {
-    const key = item.combination
-      .slice()
-      .sort((a, b) => a - b)
-      .join(",");
-    if (!seen.has(key)) {
-      seen.add(key);
-      unique.push(item);
+
+  function backtrack(start: number, currentSum: number, currentCombo: number[]) {
+    if (currentSum > 192) return;
+
+    if (currentCombo.length > 0) {
+      const key =
+        currentCombo.length === 1
+          ? String(currentCombo[0])
+          : [...currentCombo].sort((a, b) => a - b).join(",");
+
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push({
+          combination: [...currentCombo], // preserve order
+          sum: currentSum
+        });
+      }
+    }
+
+    for (let i = start; i < numbers.length; i++) {
+      currentCombo.push(numbers[i]);
+      backtrack(i + 1, currentSum + numbers[i], currentCombo);
+      currentCombo.pop();
     }
   }
 
-  return unique;
+  backtrack(0, 0, []);
+  return result;
 }
 
 function findBestCombinations(
@@ -491,3 +537,7 @@ export const calculateTrackTotalAmount = (
     }, 0),
   );
 };
+
+export const isWindow3Track4Partition = (numberOfTrack: number, numberOfDoors: number): boolean => numberOfTrack === 3 && numberOfDoors === 4;
+
+export const getNoOfInterlock = (numberOfTrack: number, numberOfDoors: number) : number => numberOfTrack === 3 && numberOfDoors === 3 ? 4 : numberOfDoors;

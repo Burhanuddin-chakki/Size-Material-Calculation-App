@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { PipeDetailType, PipeType } from "@/types";
+import { PipeDetailType, PipeType, WindowInputDetails } from "@/types";
+import { debug } from "console";
 
 interface spdpDetailProps {
   pipeType: PipeType[];
@@ -50,11 +51,8 @@ export default function SpdpDetail(props: spdpDetailProps) {
     }
   };
 
-  const selectedSpOrDpPipe = (watch as any)("selectedSpOrDpPipe") as
-    | "SP"
-    | "DP"
-    | "none"
-    | undefined;
+  const windows = (watch as any)("windows");
+  const selectedSpOrDpPipe = windows?.find((window: WindowInputDetails) => window.selectedSpOrDpPipe === "SP" || window.selectedSpOrDpPipe === "DP")?.selectedSpOrDpPipe as "SP" | "DP";
   const spdpPipeType = watch("spdpPipeType");
   const spdpType = watch("spdpType");
 

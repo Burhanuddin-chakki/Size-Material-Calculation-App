@@ -329,7 +329,7 @@
     "pipeType": "Track",
     "pipeSizeUnit": "inch",
     "pipeWeightUnit": "kg",
-    "windowType": [9, 10],
+    "windowType": [9],
     "pipeSizes": [
       {
         "size": 180,
@@ -347,7 +347,7 @@
     "pipeType": "Track",
     "pipeSizeUnit": "inch",
     "pipeWeightUnit": "kg",
-    "windowType": [9, 10],
+    "windowType": [10],
     "pipeSizes": [
       {
         "size": 180,

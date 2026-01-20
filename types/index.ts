@@ -134,3 +134,16 @@ export interface MaterialEstimation {
   unit: string;
   totalPrice: number;
 }
+
+export interface WindowInputDetails {
+  height: number;
+  width: number;
+  numberOfDoors: number;
+  isContainMacharJali: boolean;
+  isContainGrillJali: boolean;
+  selectedSpOrDpPipe?: "SP" | "DP" | "none";
+};
+
+export interface AllWindowInputDetails {
+  windows: WindowInputDetails[];
+}
