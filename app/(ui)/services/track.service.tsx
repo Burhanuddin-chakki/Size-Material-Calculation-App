@@ -219,7 +219,7 @@ const getShutterTrackRequiredCuts = (inputData: any) => {
     const partitionWidth = roundToTwoDecimals(window.width / window.numberOfDoors);
     for (let i = 0; i < iteration * 2; i++) {
       requireCuts.push(partitionWidth);
-      requireCuts.push(window.height);
+      requireCuts.push(window.height - 2); //shutter height get reduce by 2 inches in domal
     }
   });
   return requireCuts;

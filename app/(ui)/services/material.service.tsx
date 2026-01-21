@@ -100,7 +100,7 @@ const getBearingQuantity = (inputData: any): MaterialEstimationResult => {
 const getLockQuantity = (inputData: any): MaterialEstimationResult => {
   let quantity = 0;
   inputData.windows.forEach((window: WindowInputDetails) => {
-    quantity += window.isContainMacharJali
+    quantity += inputData.numberOfTrack === 2 && window.numberOfDoors === 2 ? 2 : window.isContainMacharJali
       ? getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors)
       : getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors) - 1;
   })
@@ -130,13 +130,15 @@ const getPvcBrushQuantity = (inputData: any): MaterialEstimationResult => {
 };
 const getGlassQuantity = (inputData: any): MaterialEstimationResult => {
   let quantity = 0;
+  let reducedHeight = ["Domal", "Deep Domal", "Mini Domal"].includes(inputData.windowGroup) ? 5 : 2;
+  let reducedWidth = ["Domal", "Deep Domal", "Mini Domal"].includes(inputData.windowGroup) ? 4 : 2;
   inputData.windows.forEach((window: WindowInputDetails) => {
     const partitionWidth = roundToTwoDecimals(window.width / window.numberOfDoors);
     const noOfGlassDoor = isWindow3Track4Partition(inputData.numberOfTrack, window.numberOfDoors) ? 4 : window.isContainMacharJali ? getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors) - 1
       : getNoOfPannels(inputData.numberOfTrack, window.numberOfDoors);
     quantity +=
-      getRoundFeet(window.height - 5) *
-      getRoundFeet(partitionWidth - 4) *
+      getRoundFeet(window.height - reducedHeight) *
+      getRoundFeet(partitionWidth - reducedWidth) *
       noOfGlassDoor;
   });
   const totalPrice = quantity * inputData.glass;
@@ -145,7 +147,7 @@ const getGlassQuantity = (inputData: any): MaterialEstimationResult => {
 const getGlassRubberQuantity = (inputData: any): MaterialEstimationResult => {
   let totalQuantity = 0;
   inputData.windows.forEach((window: WindowInputDetails) => {
-    totalQuantity += getGlassRubberQuantityPerWindow(inputData.windows[0].numberOfDoors, inputData.windowGroup)
+    totalQuantity += getGlassRubberQuantityPerWindow(window.numberOfDoors, inputData.windowGroup)
   })
   const totalPrice = (inputData.glassRubber / 1000) * totalQuantity;
   return { quantity: totalQuantity, rate: inputData.glassRubber, totalPrice };
@@ -154,6 +156,7 @@ const getLabourQuantity = (inputData: any): MaterialEstimationResult => {
   let quantity = 0;
   inputData.windows.forEach((window: WindowInputDetails) => {
     quantity += getRoundFeettoQuarter(window.height) * getRoundFeettoQuarter(window.width);
+    quantity = quantity < 12 ? 12 : quantity;
   });
   const totalPrice = quantity * inputData.labour;
 

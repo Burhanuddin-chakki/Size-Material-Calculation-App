@@ -55,6 +55,8 @@ export default function WindowTypePage() {
     }
   };
 
+  const [estimationLoading, setEstimationLoading] = useState(false);
+
   const {
     showAdditionalSections,
     showEstimationDetailView,
@@ -80,6 +82,17 @@ export default function WindowTypePage() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  // Handle estimation loading state
+  const handleEstimationSubmit = async (data: any) => {
+    setEstimationLoading(true);
+    try {
+      await onSubmit(data);
+    } finally {
+      // Add a small delay to ensure smooth loading experience
+      setTimeout(() => setEstimationLoading(false), 300);
+    }
+  };
 
   // Dynamic component generation
   const pipeDetailComponents = useMemo(() => {
@@ -164,7 +177,7 @@ export default function WindowTypePage() {
         }
       >
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleEstimationSubmit)}>
             <div className="row main-container" style={{ marginTop: "70px" }}>
               <WindowDetail
                 onEstimateMaterial={openMaterialAdditionalSections}
@@ -205,11 +218,22 @@ export default function WindowTypePage() {
 
       {showEstimationDetailView && (
         <div style={{ marginTop: "70px" }}>
-          <EstimationDetail
-            materialList={materialList}
-            windowType={windowType}
-            inputData={materialEstimationData}
-          />
+          {estimationLoading ? (
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ height: "50vh" }}
+            >
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading estimation...</span>
+              </div>
+            </div>
+          ) : (
+            <EstimationDetail
+              materialList={materialList}
+              windowType={windowType}
+              inputData={materialEstimationData}
+            />
+          )}
         </div>
       )}
     </>
